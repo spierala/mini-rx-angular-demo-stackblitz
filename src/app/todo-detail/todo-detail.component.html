@@ -1,0 +1,6 @@
+<form #form="ngForm">
+  <label>Title</label>
+  <input type="text" [ngModel]="todo.title" name="title">
+  <button (click)="submit(form)">Save</button>
+  <button (click)="delete()">Delete</button>
+</form>
