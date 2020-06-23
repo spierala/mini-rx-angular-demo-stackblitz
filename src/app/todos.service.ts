@@ -29,9 +29,7 @@ export class TodosService extends Feature<TodoState> {
     if (!state.selectedTodoId) {
       return new Todo();
     }
-    return (state.todos).find(
-      item => item.id === state.selectedTodoId
-    );
+    return state.todos.find(item => item.id === state.selectedTodoId);
   });
 
   constructor(private http: HttpClient) {
@@ -55,50 +53,48 @@ export class TodosService extends Feature<TodoState> {
   }
 
   load = this.createEffect(
-      switchMap(() =>
-        this.http
-          .get<Todo[]>("https://jsonplaceholder.typicode.com/todos")
-          .pipe(map(todos => ({ todos })))
-      )
+    switchMap(() =>
+      this.http
+        .get<Todo[]>("https://jsonplaceholder.typicode.com/todos")
+        .pipe(map(todos => ({ todos })))
+    )
   );
 
   create = this.createEffect<Todo>(
-      switchMap(todo =>
-        this.http
-          .post<Todo>("https://jsonplaceholder.typicode.com/todos", todo)
-          .pipe(map(todo => ({ todos: [...this.state.todos, todo] })))
-      )
+    switchMap(todo =>
+      this.http
+        .post<Todo>("https://jsonplaceholder.typicode.com/todos", todo)
+        .pipe(map(todo => ({ todos: [...this.state.todos, todo] })))
+    )
   );
 
   update = this.createEffect<Todo>(
-      switchMap(todo =>
-        this.http
-          .put<Todo>(
-            "https://jsonplaceholder.typicode.com/todos/" + todo.id,
-            todo
-          )
-          .pipe(
-            map(todo => ({
-              todos: this.state.todos.map(item =>
-                item.id === todo.id ? todo : item
-              )
-            }))
-          )
-      )
+    switchMap(todo =>
+      this.http
+        .put<Todo>(
+          "https://jsonplaceholder.typicode.com/todos/" + todo.id,
+          todo
+        )
+        .pipe(
+          map(todo => ({
+            todos: this.state.todos.map(item =>
+              item.id === todo.id ? todo : item
+            )
+          }))
+        )
+    )
   );
 
   delete = this.createEffect<Todo>(
-      switchMap(todo =>
-        this.http
-          .delete<Todo>(
-            "https://jsonplaceholder.typicode.com/todos/" + todo.id
-          )
-          .pipe(
-            map(() => ({
-              selectedTodoId: undefined,
-              todos: this.state.todos.filter(item => item.id !== todo.id)
-            }))
-          )
-      )
+    switchMap(todo =>
+      this.http
+        .delete<Todo>("https://jsonplaceholder.typicode.com/todos/" + todo.id)
+        .pipe(
+          map(() => ({
+            selectedTodoId: undefined,
+            todos: this.state.todos.filter(item => item.id !== todo.id)
+          }))
+        )
+    )
   );
 }
