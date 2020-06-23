@@ -14,8 +14,8 @@
     "rxjs": "^6.5.5",
     "tslib": "^1.11.1",
     "zone.js": "^0.10.3",
-    "mini-rx-store": "1.0.0-rc.1",
-    "mini-rx-ng-devtools": "0.0.4"
+    "mini-rx-store": "1.0.0-rc.2",
+    "mini-rx-ng-devtools": "0.0.5"
   },
   "scripts": {
     "ng": "ng",
