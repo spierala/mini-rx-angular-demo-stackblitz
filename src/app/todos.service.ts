@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { switchMap, concatMap, map } from "rxjs/operators";
 import { HttpClientModule, HttpClient } from "@angular/common/http";
 
-const apiUrl = 'https://my-json-server.typicode.com/spierala/todo-json-server/todos'
+const apiUrl = 'api/todos/'
 
 export class Todo {
   id: number;
@@ -12,7 +12,6 @@ export class Todo {
 }
 
 interface TodoState {
-  title: string;
   todos: Todo[];
   selectedTodoId: number;
 }
