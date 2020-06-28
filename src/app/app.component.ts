@@ -9,8 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class AppComponent  {
   todos$: Observable<Todo[]> = this.todosService.todos$;
-  selectedTodo$: Observable<Todo> = this.todosService.selectedTodo$; 
-  title$: Observable<string> = this.todosService.title$;
+  selectedTodo$: Observable<Todo> = this.todosService.selectedTodo$;
 
   constructor(
     private todosService: TodosService

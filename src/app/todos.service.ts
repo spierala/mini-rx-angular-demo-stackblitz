@@ -23,7 +23,6 @@ const initialState: TodoState = {
 
 @Injectable({ providedIn: "root" })
 export class TodosService extends Feature<TodoState> {
-  title$: Observable<string> = this.select(state => state.title);
   todos$: Observable<Todo[]> = this.select(state => state.todos);
   selectedTodo$: Observable<Todo> = this.select(state => {
     if (!state.selectedTodoId) {
@@ -36,12 +35,6 @@ export class TodosService extends Feature<TodoState> {
     super("todos", initialState);
 
     this.load();
-  }
-
-  addTodo(todo: Todo) {
-    this.setState({
-      todos: [todo, ...this.state.todos]
-    });
   }
 
   selectTodo(todo: Todo) {
