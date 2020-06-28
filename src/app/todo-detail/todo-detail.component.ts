@@ -20,13 +20,16 @@ export class TodoDetailComponent implements OnInit {
   }
 
   submit(form: NgForm) {
-    console.log('form', form.value);
     const newTodo: Todo = {
       ...this.todo,
       ...form.value
     }
 
-    this.todosService.update(newTodo);
+    if (newTodo.id) {
+      this.todosService.update(newTodo);
+    } else {
+      this.todosService.create(newTodo);
+    }
   }
 
   delete() {
