@@ -18,24 +18,11 @@ export class AppComponent  {
 
   }
 
-  clearTodos() {
-    this.todosService.removeAllTodos();
-  }
-
   loadTodos() {
     this.todosService.load();
   }
 
   selectTodo(todo: Todo) {
     this.todosService.selectTodo(todo);
-  }
-
-  addNewTodo() {
-    const todo: Todo = {
-      title: 'hi',
-      id: 123
-    }
-
-    this.todosService.addTodo(todo);
   }
 }

@@ -4,6 +4,8 @@ import { Observable } from "rxjs";
 import { switchMap, concatMap, map } from "rxjs/operators";
 import { HttpClientModule, HttpClient } from "@angular/common/http";
 
+const apiUrl = 'https://my-json-server.typicode.com/spierala/todo-json-server/todos'
+
 export class Todo {
   id: number;
   title: string;
@@ -16,7 +18,6 @@ interface TodoState {
 }
 
 const initialState: TodoState = {
-  title: "Hello MiniRx",
   todos: [],
   selectedTodoId: undefined
 };
@@ -48,14 +49,10 @@ export class TodosService extends Feature<TodoState> {
     this.setState({ selectedTodoId: todo.id });
   }
 
-  removeAllTodos() {
-    this.setState({ todos: [] });
-  }
-
   load = this.createEffect(
     switchMap(() =>
       this.http
-        .get<Todo[]>("https://jsonplaceholder.typicode.com/todos")
+        .get<Todo[]>(apiUrl)
         .pipe(map(todos => ({ todos })))
     )
   );
@@ -63,7 +60,7 @@ export class TodosService extends Feature<TodoState> {
   create = this.createEffect<Todo>(
     switchMap(todo =>
       this.http
-        .post<Todo>("https://jsonplaceholder.typicode.com/todos", todo)
+        .post<Todo>(apiUrl, todo)
         .pipe(map(todo => ({ todos: [...this.state.todos, todo] })))
     )
   );
@@ -72,7 +69,7 @@ export class TodosService extends Feature<TodoState> {
     switchMap(todo =>
       this.http
         .put<Todo>(
-          "https://jsonplaceholder.typicode.com/todos/" + todo.id,
+          apiUrl + todo.id,
           todo
         )
         .pipe(
@@ -88,7 +85,7 @@ export class TodosService extends Feature<TodoState> {
   delete = this.createEffect<Todo>(
     switchMap(todo =>
       this.http
-        .delete<Todo>("https://jsonplaceholder.typicode.com/todos/" + todo.id)
+        .delete<Todo>(apiUrl + todo.id)
         .pipe(
           map(() => ({
             selectedTodoId: undefined,

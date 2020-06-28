@@ -1,8 +1,6 @@
 <h1>{{title$ | async}}</h1>
 
-<button (click)="clearTodos()">clear todos</button>
 <button (click)="loadTodos()">load todos</button>
-<button (click)="addNewTodo()">add todo</button>
 
 <app-todo-detail [todo]="selectedTodo$ | async"></app-todo-detail>
 
