@@ -1,6 +1,4 @@
-<h1>{{title$ | async}}</h1>
-
-<button (click)="loadTodos()">load todos</button>
+<button (click)="loadTodos()">refresh todos</button>
 
 <app-todo-detail [todo]="selectedTodo$ | async"></app-todo-detail>
 
