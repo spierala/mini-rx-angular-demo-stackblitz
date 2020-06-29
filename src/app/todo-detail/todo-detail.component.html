@@ -1,8 +1,27 @@
-<form #form="ngForm">
-  <div class="form-group">
-    <label>Title</label>
-    <input class="form-control" type="text" [ngModel]="todo.title" name="title">
-  </div>
-  <button class="btn btn-primary" (click)="submit(form)">Save</button>
-  {{todo | json}}
-</form>
+<div class="card" *ngIf="todo">
+    <div class="card-header">
+        <span>{{ todo.id ? 'Edit Todo' : 'Create Todo' }}</span>
+    </div>
+    <div class="card-body">
+        <form #form="ngForm">
+            <div class="form-group">
+                <label>Title</label>
+                <input
+                    class="form-control"
+                    type="text"
+                    [ngModel]="todo.title"
+                    name="title"
+                    placeholder="Name (required)"
+                />
+            </div>
+            <button
+                class="btn btn-primary"
+                (click)="submit(form)"
+                [disabled]="!form.valid || !form.dirty"
+            >
+                Save
+            </button>
+            {{ todo | json }}
+        </form>
+    </div>
+</div>
