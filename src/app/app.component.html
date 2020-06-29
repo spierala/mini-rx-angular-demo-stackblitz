@@ -1,7 +1,21 @@
-<button class="btn btn-sm" (click)="loadTodos()">refresh todos</button>
+<button class="btn btn-sm" (click)="loadTodos()">Refresh</button>
+<button class="btn btn-sm" (click)="addTodo()">Add</button>
 
 <app-todo-detail [todo]="selectedTodo$ | async"></app-todo-detail>
 
-<ul>
-  <li *ngFor="let todo of todos$ | async" (click)="selectTodo(todo)">{{todo.title}}</li>
-</ul>  
+<div class="card">
+    <div class="card-header">
+        <span>Todos</span>
+    </div>
+
+    <ul class="list-group">
+        <li
+            class="list-group-item"
+            [ngClass]="{ active: (selectedTodo$ | async)?.id === todo.id }"
+            *ngFor="let todo of todos$ | async"
+            (click)="selectTodo(todo)"
+        >
+            {{ todo.title }}
+        </li>
+    </ul>
+</div>

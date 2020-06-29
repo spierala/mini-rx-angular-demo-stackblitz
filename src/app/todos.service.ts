@@ -25,7 +25,7 @@ const initialState: TodoState = {
 export class TodosService extends Feature<TodoState> {
     todos$: Observable<Todo[]> = this.select((state) => state.todos);
     selectedTodo$: Observable<Todo> = this.select((state) => {
-        if (!state.selectedTodoId) {
+        if (state.selectedTodoId === 0) {
             return new Todo();
         }
         return state.todos.find((item) => item.id === state.selectedTodoId);
@@ -39,6 +39,10 @@ export class TodosService extends Feature<TodoState> {
 
     selectTodo(todo: Todo) {
         this.setState({ selectedTodoId: todo.id }, 'selectTodo');
+    }
+
+    addTodo() {
+        this.setState({ selectedTodoId: 0 });
     }
 
     // Effects
