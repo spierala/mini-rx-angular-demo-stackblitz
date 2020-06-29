@@ -8,7 +8,8 @@ import { Observable } from 'rxjs';
     styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-    todos$: Observable<Todo[]> = this.todosService.todos$;
+    todosDone$: Observable<Todo[]> = this.todosService.todosDone$;
+    todosNotDone$: Observable<Todo[]> = this.todosService.todosNotDone$;
     selectedTodo$: Observable<Todo> = this.todosService.selectedTodo$;
 
     constructor(private todosService: TodosService) {}

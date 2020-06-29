@@ -1,21 +1,45 @@
-<button class="btn btn-sm" (click)="loadTodos()">Refresh</button>
-<button class="btn btn-sm" (click)="addTodo()">Add</button>
-
-<app-todo-detail [todo]="selectedTodo$ | async"></app-todo-detail>
-
-<div class="card">
-    <div class="card-header">
-        <span>Todos</span>
+<div class="container">
+    <div class="d-flex">
+        <button class="btn btn-sm" (click)="loadTodos()">Refresh</button>
+        <button class="btn btn-sm" (click)="addTodo()">Add</button>
     </div>
 
-    <ul class="list-group">
-        <li
-            class="list-group-item"
-            [ngClass]="{ active: (selectedTodo$ | async)?.id === todo.id }"
-            *ngFor="let todo of todos$ | async"
-            (click)="selectTodo(todo)"
-        >
-            {{ todo.title }}
-        </li>
-    </ul>
+    <app-todo-detail [todo]="selectedTodo$ | async"></app-todo-detail>
+
+    <div class="row">
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-header">
+                    <span>Todos</span>
+                </div>
+                <ul class="list-group">
+                    <li
+                            class="list-group-item"
+                            [ngClass]="{ active: (selectedTodo$ | async)?.id === todo.id }"
+                            *ngFor="let todo of todosNotDone$ | async"
+                            (click)="selectTodo(todo)"
+                    >
+                        {{ todo.title }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-header">
+                    <span>Todos Done</span>
+                </div>
+                <ul class="list-group">
+                    <li
+                            class="list-group-item"
+                            [ngClass]="{ active: (selectedTodo$ | async)?.id === todo.id }"
+                            *ngFor="let todo of todosDone$ | async"
+                            (click)="selectTodo(todo)"
+                    >
+                        {{ todo.title }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>

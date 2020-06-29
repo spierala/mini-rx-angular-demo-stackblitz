@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Feature } from 'mini-rx-store';
-import { Observable } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { Observable, of, pipe } from 'rxjs';
+import { catchError, map, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
 const apiUrl = 'api/todos/';
@@ -9,6 +9,7 @@ const apiUrl = 'api/todos/';
 export class Todo {
     id: number;
     title: string;
+    isDone: boolean;
 }
 
 interface TodoState {
@@ -23,7 +24,12 @@ const initialState: TodoState = {
 
 @Injectable({ providedIn: 'root' })
 export class TodosService extends Feature<TodoState> {
-    todos$: Observable<Todo[]> = this.select((state) => state.todos);
+    todosDone$: Observable<Todo[]> = this.select((state) =>
+        state.todos.filter((item) => item.isDone)
+    );
+    todosNotDone$: Observable<Todo[]> = this.select((state) =>
+        state.todos.filter((item) => !item.isDone)
+    );
     selectedTodo$: Observable<Todo> = this.select((state) => {
         if (state.selectedTodoId === 0) {
             return new Todo();
@@ -66,13 +72,28 @@ export class TodosService extends Feature<TodoState> {
     );
 
     update = this.createEffect<Todo>(
-        switchMap((todo) =>
-            this.http.put<Todo>(apiUrl + todo.id, todo).pipe(
-                map((updatedTodo) => ({
-                    todos: this.state.todos.map((item) =>
-                        item.id === todo.id ? updatedTodo : item
+        pipe(
+            withLatestFrom(this.selectedTodo$), // Get snapshot of selectedTodo for undoing optimistic update
+            switchMap(([todo, originalTodo]) =>
+                this.http.put<Todo>(apiUrl + todo.id, todo).pipe(
+                    map((updatedTodo) => ({
+                        todos: this.state.todos.map((item) =>
+                            item.id === todo.id ? updatedTodo : item
+                        ),
+                    })),
+                    // Undo Optimistic Update
+                    catchError(() =>
+                        of({
+                            todos: this.state.todos.map((item) =>
+                                item.id === todo.id ? originalTodo : item
+                            ),
+                        })
                     ),
-                }))
+                    // Optimistic Update
+                    startWith({
+                        todos: this.state.todos.map((item) => (item.id === todo.id ? todo : item)),
+                    })
+                )
             )
         ),
         'update'

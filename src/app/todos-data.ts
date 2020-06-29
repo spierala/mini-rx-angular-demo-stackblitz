@@ -7,6 +7,17 @@ export class TodosData implements InMemoryDbService {
             {
                 id: 1,
                 title: 'TODO 1',
+                isDone: false,
+            },
+            {
+                id: 2,
+                title: 'TODO 2',
+                isDone: false,
+            },
+            {
+                id: 3,
+                title: 'TODO 3',
+                isDone: true,
             },
         ];
         return { todos };

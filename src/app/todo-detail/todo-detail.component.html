@@ -14,6 +14,12 @@
                     placeholder="Name (required)"
                 />
             </div>
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="customSwitch1" [ngModel]="todo.isDone" name="isDone">
+                    <label class="custom-control-label" for="customSwitch1">Toggle this switch element</label>
+                </div>
+            </div>
             <button
                 class="btn btn-primary"
                 (click)="submit(form)"
@@ -21,7 +27,6 @@
             >
                 Save
             </button>
-            {{ todo | json }}
         </form>
     </div>
 </div>
