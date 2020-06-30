@@ -4,7 +4,7 @@
         <button class="btn btn-sm" (click)="addTodo()">Add</button>
     </div>
 
-    <app-todo-detail [todo]="selectedTodo$ | async"></app-todo-detail>
+    <app-todo-detail *ngIf="selectedTodo$ | async as selectedTodo" [todo]="selectedTodo"></app-todo-detail>
 
     <div class="row">
         <div class="col">

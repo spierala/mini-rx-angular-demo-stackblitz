@@ -5,25 +5,21 @@ import { Todo, TodosService } from '../todos.service';
 @Component({
   selector: 'app-todo-detail',
   templateUrl: './todo-detail.component.html',
-  styleUrls: ['./todo-detail.component.css']
+  styleUrls: ['./todo-detail.component.css'],
 })
 export class TodoDetailComponent implements OnInit {
-
   @Input()
   todo: Todo;
 
-  constructor(
-    private todosService: TodosService
-  ) { }
+  constructor(private todosService: TodosService) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   submit(form: NgForm) {
     const newTodo: Todo = {
       ...this.todo,
-      ...form.value
-    }
+      ...form.value,
+    };
 
     if (newTodo.id) {
       this.todosService.update(newTodo);
@@ -34,5 +30,9 @@ export class TodoDetailComponent implements OnInit {
 
   delete() {
     this.todosService.delete(this.todo);
+  }
+
+  onClose() {
+    this.todosService.clearSelectedTodo();
   }
 }

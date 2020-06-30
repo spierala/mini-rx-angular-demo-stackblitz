@@ -51,6 +51,10 @@ export class TodosService extends Feature<TodoState> {
     this.setState({ selectedTodoId: 0 });
   }
 
+  clearSelectedTodo() {
+    this.setState({ selectedTodoId: undefined });
+  }
+
   // Effects
   load = this.createEffect(
     switchMap(() => this.http.get<Todo[]>(apiUrl).pipe(map((todos) => ({ todos })))),
@@ -79,7 +83,7 @@ export class TodosService extends Feature<TodoState> {
           map((updatedTodo) => ({
             todos: this.state.todos.map((item) => (item.id === todo.id ? updatedTodo : item)),
           })),
-          // Undo Optimistic Update
+          // UNDO Optimistic Update
           catchError(() =>
             of({
               todos: this.state.todos.map((item) => (item.id === todo.id ? originalTodo : item)),

@@ -1,33 +1,40 @@
-<div class="card" *ngIf="todo">
-    <div class="card-header">
-        <span>{{ todo.id ? 'Edit Todo' : 'Create Todo' }}</span>
-    </div>
-    <div class="card-body">
-        <form #form="ngForm">
-            <div class="form-group">
-                <label>Title</label>
-                <input
-                    class="form-control"
-                    type="text"
-                    [ngModel]="todo.title"
-                    name="title"
-                    placeholder="Name (required)"
-                />
+<div class="modal modal-open" tabindex="-1" role="dialog" style="display: block">
+    <div class="modal-dialog modal-dialog-centered">
+        <form #form="ngForm" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ todo.id ? 'Edit Todo' : 'Create Todo' }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onClose()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="form-group">
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="customSwitch1" [ngModel]="todo.isDone" name="isDone">
-                    <label class="custom-control-label" for="customSwitch1">Toggle this switch element</label>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input
+                            class="form-control"
+                            type="text"
+                            [ngModel]="todo.title"
+                            name="title"
+                            placeholder="Name (required)"
+                    />
+                </div>
+                <div class="form-group">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="customSwitch1" [ngModel]="todo.isDone" name="isDone">
+                        <label class="custom-control-label" for="customSwitch1">Toggle this switch element</label>
+                    </div>
                 </div>
             </div>
-            <button
-                class="btn btn-primary mr-2"
-                (click)="submit(form)"
-                [disabled]="!form.valid || !form.dirty"
-            >
-                Save
-            </button>
-            <button *ngIf="todo.id" class="btn btn-primary btn-danger" (click)="delete()">Delete</button>
+            <div class="modal-footer">
+                <button
+                        class="btn btn-primary mr-2"
+                        (click)="submit(form)"
+                        [disabled]="!form.valid || !form.dirty"
+                >
+                    Save
+                </button>
+                <button *ngIf="todo.id" class="btn btn-primary btn-danger" (click)="delete()">Delete</button>
+            </div>
         </form>
     </div>
 </div>
