@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Feature } from 'mini-rx-store';
+import { createFeatureSelector, createSelector, Feature } from 'mini-rx-store';
 import { Observable, of, pipe } from 'rxjs';
 import { catchError, map, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -15,45 +15,20 @@ export class Todo {
 interface TodoState {
   todos: Todo[];
   selectedTodoId: number;
+  filter: string;
 }
 
 const initialState: TodoState = {
   todos: [],
   selectedTodoId: undefined,
+  filter: '',
 };
 
 @Injectable({ providedIn: 'root' })
 export class TodosService extends Feature<TodoState> {
-  todosDone$: Observable<Todo[]> = this.select((state) =>
-    state.todos.filter((item) => item.isDone)
-  );
-  todosNotDone$: Observable<Todo[]> = this.select((state) =>
-    state.todos.filter((item) => !item.isDone)
-  );
-  selectedTodo$: Observable<Todo> = this.select((state) => {
-    if (state.selectedTodoId === 0) {
-      return new Todo();
-    }
-    return state.todos.find((item) => item.id === state.selectedTodoId);
-  });
-
-  constructor(private http: HttpClient) {
-    super('todos', initialState);
-
-    this.load();
-  }
-
-  selectTodo(todo: Todo) {
-    this.setState({ selectedTodoId: todo.id }, 'selectTodo');
-  }
-
-  addTodo() {
-    this.setState({ selectedTodoId: 0 });
-  }
-
-  clearSelectedTodo() {
-    this.setState({ selectedTodoId: undefined });
-  }
+  todosDone$: Observable<Todo[]> = this.select(getTodosFilteredDone);
+  todosNotDone$: Observable<Todo[]> = this.select(getTodosFilteredNotDone);
+  selectedTodo$: Observable<Todo> = this.select(getSelectedTodo);
 
   // Effects
   load = this.createEffect(
@@ -110,4 +85,46 @@ export class TodosService extends Feature<TodoState> {
     ),
     'delete'
   );
+
+  constructor(private http: HttpClient) {
+    super('todos', initialState);
+    this.load();
+  }
+
+  selectTodo(todo: Todo) {
+    this.setState({ selectedTodoId: todo.id }, 'selectTodo');
+  }
+
+  initNewTodo() {
+    this.setState({ selectedTodoId: 0 }, 'initNewTodo');
+  }
+
+  clearSelectedTodo() {
+    this.setState({ selectedTodoId: undefined }, 'clearSelectedTodo');
+  }
+
+  updateFilter(filter: string) {
+    this.setState({ filter }, 'updateFilter');
+  }
 }
+
+// Selectors
+const getFeatureState = createFeatureSelector<TodoState>();
+const getTodos = createSelector(getFeatureState, (state) => state.todos);
+const getSelectedTodoId = createSelector(getFeatureState, (state) => state.selectedTodoId);
+const getSelectedTodo = createSelector(getTodos, getSelectedTodoId, (todos, selectedTodoId) => {
+  if (selectedTodoId === 0) {
+    return new Todo();
+  }
+  return todos.find((item) => item.id === selectedTodoId);
+});
+const getFilter = createSelector(getFeatureState, (state) => state.filter);
+const getTodosFiltered = createSelector(getTodos, getFilter, (todos, filter) => {
+  return todos.filter((item) => item.title.toUpperCase().indexOf(filter.toUpperCase()) > -1);
+});
+const getTodosFilteredDone = createSelector(getTodosFiltered, (todos) =>
+  todos.filter((item) => item.isDone)
+);
+const getTodosFilteredNotDone = createSelector(getTodosFiltered, (todos) =>
+  todos.filter((item) => !item.isDone)
+);
