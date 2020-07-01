@@ -1,7 +1,6 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { debounceTime } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Filter } from '../model/filter';
 
 @Component({
   selector: 'app-filter',
@@ -9,16 +8,27 @@ import { Observable } from 'rxjs';
   styleUrls: ['./filter.component.css'],
 })
 export class FilterComponent implements OnInit {
-  searchFc: FormControl = new FormControl();
-
-  formGroup: FormGroup = new FormGroup({
-    search: this.searchFc,
-  });
+  @Input()
+  set filter(filter: Filter) {
+    this.formGroup.setValue(filter);
+  }
 
   @Output()
-  filterUpdate: Observable<string> = this.searchFc.valueChanges.pipe(debounceTime(350));
+  filterUpdate: EventEmitter<Filter> = new EventEmitter();
+
+  formGroup: FormGroup = new FormGroup({
+    search: new FormControl(),
+    isBusiness: new FormControl(),
+    isPrivate: new FormControl(),
+  });
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.formGroup.valueChanges.subscribe(
+      value => {
+        this.filterUpdate.emit(value)
+      }
+    );
+  }
 }

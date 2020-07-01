@@ -18,7 +18,17 @@
             <div class="form-group">
                 <div class="custom-control custom-switch">
                     <input type="checkbox" class="custom-control-input" id="customSwitch1" [ngModel]="todo.isDone" name="isDone">
-                    <label class="custom-control-label" for="customSwitch1">Toggle this switch element</label>
+                    <label class="custom-control-label" for="customSwitch1">Done</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="isPrivate" name="isPrivate" [ngModel]="todo.isPrivate">
+                    <label class="form-check-label" for="isPrivate">Private</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="isBusiness" name="isBusiness" [ngModel]="todo.isBusiness">
+                    <label class="form-check-label" for="isBusiness">Business</label>
                 </div>
             </div>
             <button

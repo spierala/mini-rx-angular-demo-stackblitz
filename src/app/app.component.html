@@ -1,17 +1,23 @@
+<nav class="navbar navbar-light bg-light mb-4">
+    <a class="navbar-brand" href="#">
+        MiniRx Todos
+    </a>
+    <div class="d-flex mb-2 justify-content-end mt-2">
+        <button class="btn btn-primary btn-sm" (click)="addTodo()">Add</button>
+        <button class="btn btn-sm" (click)="loadTodos()">Refresh</button>
+        <app-filter (filterUpdate)="onFilterUpdate($event)" [filter]="filter$ | async"></app-filter>
+    </div>
+
+</nav>
+
 <div>
     <mat-sidenav-container class="example-container">
-        <mat-sidenav #sidenav mode="side" [opened]="selectedTodo$ | async" [position]="'end'" [mode]="'side'">
+        <mat-sidenav mode="side" [opened]="selectedTodo$ | async" [position]="'end'" [mode]="'side'">
             <app-todo-detail *ngIf="selectedTodo$ | async as selectedTodo" [todo]="selectedTodo"></app-todo-detail>
         </mat-sidenav>
 
         <mat-sidenav-content>
             <div class="container">
-                <div class="d-flex mb-2 justify-content-end mt-2">
-                    <button class="btn btn-primary btn-sm" (click)="addTodo()">Add</button>
-                    <button class="btn btn-sm" (click)="loadTodos()">Refresh</button>
-                    <app-filter (filterUpdate)="onFilterUpdate($event)"></app-filter>
-                </div>
-
                 <div class="row">
                     <div class="col">
                         <div class="card h-100">

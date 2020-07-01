@@ -3,25 +3,21 @@ import { createFeatureSelector, createSelector, Feature } from 'mini-rx-store';
 import { Observable, of, pipe } from 'rxjs';
 import { catchError, map, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { Todo } from './model/todo';
+import { Filter } from './model/filter';
 
 const apiUrl = 'api/todos/';
-
-export class Todo {
-  id: number;
-  title: string;
-  isDone: boolean;
-}
 
 interface TodoState {
   todos: Todo[];
   selectedTodoId: number;
-  filter: string;
+  filter: Filter;
 }
 
 const initialState: TodoState = {
   todos: [],
   selectedTodoId: undefined,
-  filter: '',
+  filter: new Filter(),
 };
 
 @Injectable({ providedIn: 'root' })
@@ -29,6 +25,7 @@ export class TodosService extends Feature<TodoState> {
   todosDone$: Observable<Todo[]> = this.select(getTodosFilteredDone);
   todosNotDone$: Observable<Todo[]> = this.select(getTodosFilteredNotDone);
   selectedTodo$: Observable<Todo> = this.select(getSelectedTodo);
+  filter$: Observable<Filter> = this.select(getFilter);
 
   // Effects
   load = this.createEffect(
@@ -103,7 +100,7 @@ export class TodosService extends Feature<TodoState> {
     this.setState({ selectedTodoId: undefined }, 'clearSelectedTodo');
   }
 
-  updateFilter(filter: string) {
+  updateFilter(filter: Filter) {
     this.setState({ filter }, 'updateFilter');
   }
 }
@@ -120,7 +117,9 @@ const getSelectedTodo = createSelector(getTodos, getSelectedTodoId, (todos, sele
 });
 const getFilter = createSelector(getFeatureState, (state) => state.filter);
 const getTodosFiltered = createSelector(getTodos, getFilter, (todos, filter) => {
-  return todos.filter((item) => item.title.toUpperCase().indexOf(filter.toUpperCase()) > -1);
+  return todos.filter((item) => {
+    return item.title.toUpperCase().indexOf(filter.search.toUpperCase()) > -1 && (filter.isBusiness ? item.isBusiness : true) && (filter.isPrivate ? item.isPrivate : true)
+  });
 });
 const getTodosFilteredDone = createSelector(getTodosFiltered, (todos) =>
   todos.filter((item) => item.isDone)
