@@ -10,10 +10,13 @@ import { TodoDetailComponent } from './todo-detail/todo-detail.component';
 import { NgReduxDevtoolsModule } from 'mini-rx-ng-devtools';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { FilterComponent } from './filter/filter.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
@@ -23,6 +26,7 @@ import { FilterComponent } from './filter/filter.component';
       maxAge: 25,
       latency: 1000,
     }),
+    MatSidenavModule
   ],
   declarations: [AppComponent, TodoDetailComponent, FilterComponent],
   bootstrap: [AppComponent],

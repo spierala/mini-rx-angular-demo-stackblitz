@@ -1,46 +1,54 @@
-<div class="container">
-    <div class="d-flex mb-2 mt-2">
-        <button class="btn btn-sm" (click)="loadTodos()">Refresh</button>
-        <button class="btn btn-sm" (click)="addTodo()">Add</button>
-        <app-filter (filterUpdate)="onFilterUpdate($event)"></app-filter>
-    </div>
+<div>
+    <mat-sidenav-container class="example-container">
+        <mat-sidenav #sidenav mode="side" [opened]="selectedTodo$ | async" [position]="'end'" [mode]="'side'">
+            <app-todo-detail *ngIf="selectedTodo$ | async as selectedTodo" [todo]="selectedTodo"></app-todo-detail>
+        </mat-sidenav>
 
-    <div class="row">
-        <div class="col">
-            <div class="card h-100">
-                <div class="card-header">
-                    <span>Todos</span>
+        <mat-sidenav-content>
+            <div class="container">
+                <div class="d-flex mb-2 justify-content-end mt-2">
+                    <button class="btn btn-primary btn-sm" (click)="addTodo()">Add</button>
+                    <button class="btn btn-sm" (click)="loadTodos()">Refresh</button>
+                    <app-filter (filterUpdate)="onFilterUpdate($event)"></app-filter>
                 </div>
-                <ul class="list-group">
-                    <li
-                            class="list-group-item"
-                            [ngClass]="{ active: (selectedTodo$ | async)?.id === todo.id }"
-                            *ngFor="let todo of todosNotDone$ | async"
-                            (click)="selectTodo(todo)"
-                    >
-                        {{ todo.title }}
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                <div class="card-header">
-                    <span>Todos Done</span>
-                </div>
-                <ul class="list-group">
-                    <li
-                            class="list-group-item"
-                            [ngClass]="{ active: (selectedTodo$ | async)?.id === todo.id }"
-                            *ngFor="let todo of todosDone$ | async"
-                            (click)="selectTodo(todo)"
-                    >
-                        {{ todo.title }}
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
 
-    <app-todo-detail *ngIf="selectedTodo$ | async as selectedTodo" [todo]="selectedTodo"></app-todo-detail>
+                <div class="row">
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <span>Todos</span>
+                            </div>
+                            <ul class="list-group">
+                                <li
+                                        class="list-group-item"
+                                        [ngClass]="{ active: (selectedTodo$ | async)?.id === todo.id }"
+                                        *ngFor="let todo of todosNotDone$ | async"
+                                        (click)="selectTodo(todo)"
+                                >
+                                    {{ todo.title }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <span>Todos Done</span>
+                            </div>
+                            <ul class="list-group">
+                                <li
+                                        class="list-group-item"
+                                        [ngClass]="{ active: (selectedTodo$ | async)?.id === todo.id }"
+                                        *ngFor="let todo of todosDone$ | async"
+                                        (click)="selectTodo(todo)"
+                                >
+                                    {{ todo.title }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
 </div>
