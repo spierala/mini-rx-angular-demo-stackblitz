@@ -12,8 +12,12 @@
 
 <div>
     <mat-sidenav-container class="example-container">
-        <mat-sidenav mode="side" [opened]="selectedTodo$ | async" [position]="'end'" [mode]="'side'">
-            <app-todo-detail *ngIf="selectedTodo$ | async as selectedTodo" [todo]="selectedTodo"></app-todo-detail>
+        <mat-sidenav mode="side"
+                     [opened]="selectedTodo$ | async"
+                     [position]="'end'"
+                     [mode]="'side'">
+            <app-todo-detail *ngIf="selectedTodo$ | async as selectedTodo"
+                             [todo]="selectedTodo"></app-todo-detail>
         </mat-sidenav>
 
         <mat-sidenav-content>
@@ -24,16 +28,9 @@
                             <div class="card-header">
                                 <span>Todos</span>
                             </div>
-                            <ul class="list-group">
-                                <li
-                                        class="list-group-item"
-                                        [ngClass]="{ active: (selectedTodo$ | async)?.id === todo.id }"
-                                        *ngFor="let todo of todosNotDone$ | async"
-                                        (click)="selectTodo(todo)"
-                                >
-                                    {{ todo.title }}
-                                </li>
-                            </ul>
+                            <app-todo-list [todos]="todosNotDone$ | async"
+                                           [selectedTodo]="selectedTodo$ | async"
+                                           (selectTodo)="selectTodo($event)"></app-todo-list>
                         </div>
                     </div>
                     <div class="col">
@@ -41,16 +38,9 @@
                             <div class="card-header">
                                 <span>Todos Done</span>
                             </div>
-                            <ul class="list-group">
-                                <li
-                                        class="list-group-item"
-                                        [ngClass]="{ active: (selectedTodo$ | async)?.id === todo.id }"
-                                        *ngFor="let todo of todosDone$ | async"
-                                        (click)="selectTodo(todo)"
-                                >
-                                    {{ todo.title }}
-                                </li>
-                            </ul>
+                            <app-todo-list [todos]="todosDone$ | async"
+                                           [selectedTodo]="selectedTodo$ | async"
+                                           (selectTodo)="selectTodo($event)"></app-todo-list>
                         </div>
                     </div>
                 </div>

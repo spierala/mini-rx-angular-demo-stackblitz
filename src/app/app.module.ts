@@ -12,6 +12,7 @@ import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { FilterComponent } from './filter/filter.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TodoListComponent } from './todo-list/todo-list.component';
 
 @NgModule({
   imports: [
@@ -20,7 +21,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(TodosData, { delay: 1000, put204: false }),
+    HttpClientInMemoryWebApiModule.forRoot(TodosData, { delay: 500, put204: false }),
     NgReduxDevtoolsModule.instrument({
       name: 'Stackblitz Angular MiniRx Todos Showcase',
       maxAge: 25,
@@ -28,7 +29,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     }),
     MatSidenavModule
   ],
-  declarations: [AppComponent, TodoDetailComponent, FilterComponent],
+  declarations: [AppComponent, TodoDetailComponent, FilterComponent, TodoListComponent],
   bootstrap: [AppComponent],
   providers: [TodosService],
 })
