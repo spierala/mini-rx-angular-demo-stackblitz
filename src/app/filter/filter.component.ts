@@ -10,7 +10,7 @@ import { Filter } from '../model/filter';
 export class FilterComponent implements OnInit {
   @Input()
   set filter(filter: Filter) {
-    this.formGroup.setValue(filter);
+    this.formGroup.setValue(filter, { emitEvent: false });
   }
 
   @Output()
@@ -25,10 +25,8 @@ export class FilterComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.formGroup.valueChanges.subscribe(
-      value => {
-        this.filterUpdate.emit(value)
-      }
-    );
+    this.formGroup.valueChanges.subscribe((value) => {
+      this.filterUpdate.emit(value);
+    });
   }
 }
