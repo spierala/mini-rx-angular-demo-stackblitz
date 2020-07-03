@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createFeatureSelector, createSelector, Feature } from 'mini-rx-store';
 import { Observable, of, pipe } from 'rxjs';
-import { catchError, map, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, map, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Todo } from './model/todo';
 import { Filter } from './model/filter';
@@ -36,7 +36,7 @@ export class TodosService extends Feature<TodoState> {
   create = this.createEffect<Todo>(
     switchMap((todo) => {
       return this.http
-        .post<Todo>(apiUrl, { ...todo, id: null }) // Product Id must be null for the Web API to assign an Id
+        .post<Todo>(apiUrl, { ...todo })
         .pipe(
           map((newTodo) => ({
             todos: [...this.state.todos, newTodo],
@@ -118,7 +118,11 @@ const getSelectedTodo = createSelector(getTodos, getSelectedTodoId, (todos, sele
 const getFilter = createSelector(getFeatureState, (state) => state.filter);
 const getTodosFiltered = createSelector(getTodos, getFilter, (todos, filter) => {
   return todos.filter((item) => {
-    return item.title.toUpperCase().indexOf(filter.search.toUpperCase()) > -1 && (filter.isBusiness ? item.isBusiness : true) && (filter.isPrivate ? item.isPrivate : true)
+    return (
+      item.title.toUpperCase().indexOf(filter.search.toUpperCase()) > -1 &&
+      (filter.isBusiness ? item.isBusiness : true) &&
+      (filter.isPrivate ? item.isPrivate : true)
+    );
   });
 });
 const getTodosFilteredDone = createSelector(getTodosFiltered, (todos) =>
