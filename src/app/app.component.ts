@@ -17,10 +17,6 @@ export class AppComponent {
 
   constructor(private todosService: TodosService) {}
 
-  loadTodos() {
-    this.todosService.load();
-  }
-
   selectTodo(todo: Todo) {
     this.todosService.selectTodo(todo);
   }

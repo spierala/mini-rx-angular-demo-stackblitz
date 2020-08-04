@@ -1,7 +1,7 @@
-export class Filter {
-  search: string = '';
-  isBusiness: boolean = false;
-  isPrivate: boolean = false;
+export interface Filter {
+  search: string;
+  category: {
+    isBusiness: boolean;
+    isPrivate: boolean;
+  };
 }
-
-

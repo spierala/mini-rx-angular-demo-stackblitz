@@ -3,7 +3,7 @@
         *ngFor="let todo of todos"
         [ngClass]="{ active: selectedTodo?.id === todo.id }"
         (click)="selectTodo.emit(todo)">{{ todo.title }} 
-        <span *ngIf="todo.isBusiness">[Business]</span>
-        <span *ngIf="todo.isPrivate">[Private]</span>
+        <span *ngIf="todo.isBusiness" class="badge badge-info mr-1">Business</span>
+        <span *ngIf="todo.isPrivate" class="badge badge-primary">Private</span>
     </li>
 </ul>

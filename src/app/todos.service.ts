@@ -17,7 +17,13 @@ interface TodoState {
 const initialState: TodoState = {
   todos: [],
   selectedTodoId: undefined,
-  filter: new Filter(),
+  filter: {
+    search: '',
+    category: {
+      isBusiness: false,
+      isPrivate: false,
+    },
+  },
 };
 
 @Injectable({ providedIn: 'root' })
@@ -101,7 +107,7 @@ export class TodosService extends Feature<TodoState> {
   }
 
   updateFilter(filter: Filter) {
-    this.setState({ filter }, 'updateFilter');
+    this.setState({ filter: { ...this.state.filter, ...filter } }, 'updateFilter');
   }
 }
 
@@ -120,8 +126,8 @@ const getTodosFiltered = createSelector(getTodos, getFilter, (todos, filter) => 
   return todos.filter((item) => {
     return (
       item.title.toUpperCase().indexOf(filter.search.toUpperCase()) > -1 &&
-      (filter.isBusiness ? item.isBusiness : true) &&
-      (filter.isPrivate ? item.isPrivate : true)
+      (filter.category.isBusiness ? item.isBusiness : true) &&
+      (filter.category.isPrivate ? item.isPrivate : true)
     );
   });
 });

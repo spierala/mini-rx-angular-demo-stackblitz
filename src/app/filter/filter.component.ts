@@ -1,13 +1,15 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Filter } from '../model/filter';
+import { debounceTime, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-filter',
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.css'],
 })
-export class FilterComponent implements OnInit {
+export class FilterComponent implements OnInit, OnDestroy {
   @Input()
   set filter(filter: Filter) {
     this.formGroup.setValue(filter, { emitEvent: false });
@@ -18,15 +20,41 @@ export class FilterComponent implements OnInit {
 
   formGroup: FormGroup = new FormGroup({
     search: new FormControl(),
-    isBusiness: new FormControl(),
-    isPrivate: new FormControl(),
+    category: new FormGroup({
+      isBusiness: new FormControl(),
+      isPrivate: new FormControl(),
+    }),
   });
+
+  private unsubscribe$ = new Subject();
 
   constructor() {}
 
   ngOnInit(): void {
-    this.formGroup.valueChanges.subscribe((value) => {
-      this.filterUpdate.emit(value);
-    });
+    // Debounce just the text input
+    this.formGroup
+      .get('search')
+      .valueChanges.pipe(takeUntil(this.unsubscribe$), debounceTime(350))
+      .subscribe((value) => {
+        this.filterUpdate.emit({
+          ...this.formGroup.value,
+          search: value,
+        });
+      });
+
+    this.formGroup
+      .get('category')
+      .valueChanges.pipe(takeUntil(this.unsubscribe$))
+      .subscribe((value) => {
+        this.filterUpdate.emit({
+          ...this.formGroup.value,
+          category: value,
+        });
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
