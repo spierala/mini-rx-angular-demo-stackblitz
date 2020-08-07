@@ -2,11 +2,9 @@ import { Injectable } from '@angular/core';
 import { createFeatureSelector, createSelector, Feature } from 'mini-rx-store';
 import { Observable, of, pipe } from 'rxjs';
 import { catchError, map, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
 import { Todo } from './model/todo';
 import { Filter } from './model/filter';
-
-const apiUrl = 'api/todos/';
+import { TodosApiService } from './todos-api.service';
 
 interface TodoState {
   todos: Todo[];
@@ -35,20 +33,18 @@ export class TodosService extends Feature<TodoState> {
 
   // Effects
   load = this.createEffect(
-    switchMap(() => this.http.get<Todo[]>(apiUrl).pipe(map((todos) => ({ todos })))),
+    switchMap(() => this.apiService.getTodos().pipe(map((todos) => ({ todos })))),
     'load'
   );
 
   create = this.createEffect<Todo>(
     switchMap((todo) => {
-      return this.http
-        .post<Todo>(apiUrl, { ...todo })
-        .pipe(
-          map((newTodo) => ({
-            todos: [...this.state.todos, newTodo],
-            selectedTodoId: newTodo.id,
-          }))
-        );
+      return this.apiService.createTodo(todo).pipe(
+        map((newTodo) => ({
+          todos: [...this.state.todos, newTodo],
+          selectedTodoId: newTodo.id,
+        }))
+      );
     }),
     'create'
   );
@@ -57,7 +53,7 @@ export class TodosService extends Feature<TodoState> {
     pipe(
       withLatestFrom(this.selectedTodo$), // Get snapshot of selectedTodo for undoing optimistic update
       switchMap(([todo, originalTodo]) =>
-        this.http.put<Todo>(apiUrl + todo.id, todo).pipe(
+        this.apiService.updateTodo(todo).pipe(
           map((updatedTodo) => ({
             todos: this.state.todos.map((item) => (item.id === todo.id ? updatedTodo : item)),
           })),
@@ -79,7 +75,7 @@ export class TodosService extends Feature<TodoState> {
 
   delete = this.createEffect<Todo>(
     switchMap((todo) =>
-      this.http.delete<Todo>(apiUrl + todo.id).pipe(
+      this.apiService.deleteTodo(todo).pipe(
         map(() => ({
           selectedTodoId: undefined,
           todos: this.state.todos.filter((item) => item.id !== todo.id),
@@ -89,7 +85,7 @@ export class TodosService extends Feature<TodoState> {
     'delete'
   );
 
-  constructor(private http: HttpClient) {
+  constructor(private apiService: TodosApiService) {
     super('todos', initialState);
     this.load();
   }
