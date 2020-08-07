@@ -87,7 +87,7 @@ export class TodosService extends Feature<TodoState> {
 
   constructor(private apiService: TodosApiService) {
     super('todos', initialState);
-    this.load();
+    this.load(); // TODO load here OK?
   }
 
   selectTodo(todo: Todo) {

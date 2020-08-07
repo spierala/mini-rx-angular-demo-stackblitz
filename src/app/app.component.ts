@@ -3,6 +3,7 @@ import { TodosService } from './todos.service';
 import { Observable } from 'rxjs';
 import { Filter } from './model/filter';
 import { Todo } from './model/todo';
+import { TodosDiyService } from './todos-diy.service';
 
 @Component({
   selector: 'my-app',
@@ -15,7 +16,7 @@ export class AppComponent {
   selectedTodo$: Observable<Todo> = this.todosService.selectedTodo$;
   filter$: Observable<Filter> = this.todosService.filter$;
 
-  constructor(private todosService: TodosService) {}
+  constructor(private todosService: TodosDiyService) {}
 
   selectTodo(todo: Todo) {
     this.todosService.selectTodo(todo);

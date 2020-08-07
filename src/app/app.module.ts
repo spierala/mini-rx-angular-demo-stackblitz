@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { TodosService } from './todos.service';
 import { TodosData } from './todos-data';
 import { HttpClientModule } from '@angular/common/http';
 import { TodoDetailComponent } from './todo-detail/todo-detail.component';
@@ -27,10 +26,9 @@ import { TodoListComponent } from './todo-list/todo-list.component';
       maxAge: 25,
       latency: 1000,
     }),
-    MatSidenavModule
+    MatSidenavModule,
   ],
   declarations: [AppComponent, TodoDetailComponent, FilterComponent, TodoListComponent],
   bootstrap: [AppComponent],
-  providers: [TodosService],
 })
 export class AppModule {}
