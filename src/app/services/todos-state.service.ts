@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { StateService } from './state.service';
-import { Todo } from './model/todo';
-import { Filter } from './model/filter';
+import { Todo } from '../model/todo';
+import { Filter } from '../model/filter';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TodosApiService } from './todos-api.service';
+import { TodosApiService } from './api/todos-api.service';
 
 interface TodoState {
   todos: Todo[];
@@ -27,7 +27,7 @@ const initialState: TodoState = {
 @Injectable({
   providedIn: 'root',
 })
-export class TodosDiyService extends StateService<TodoState> {
+export class TodosStateService extends StateService<TodoState> {
   private todosFiltered$: Observable<Todo[]> = this.select((state) => {
     return getTodosFiltered(state.todos, state.filter);
   });
@@ -38,9 +38,12 @@ export class TodosDiyService extends StateService<TodoState> {
     map((todos) => todos.filter((todo) => !todo.isDone))
   );
   filter$: Observable<Filter> = this.select((state) => state.filter);
-  selectedTodo$: Observable<Todo> = this.select((state) =>
-    state.todos.find((item) => item.id === state.selectedTodoId)
-  );
+  selectedTodo$: Observable<Todo> = this.select((state) => {
+    if (state.selectedTodoId === 0) {
+      return new Todo();
+    }
+    return state.todos.find((item) => item.id === state.selectedTodoId);
+  });
 
   constructor(private apiService: TodosApiService) {
     super(initialState);
@@ -68,6 +71,7 @@ export class TodosDiyService extends StateService<TodoState> {
     });
   }
 
+  // API CALLS
   load() {
     this.apiService.getTodos().subscribe((todos) => this.setState({ todos }));
   }

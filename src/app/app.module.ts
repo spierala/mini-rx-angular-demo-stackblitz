@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { TodosData } from './todos-data';
+import { TodosData } from './services/api/todos-data';
 import { HttpClientModule } from '@angular/common/http';
 import { TodoDetailComponent } from './todo-detail/todo-detail.component';
 import { NgReduxDevtoolsModule } from 'mini-rx-ng-devtools';

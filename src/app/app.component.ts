@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { TodosService } from './todos.service';
 import { Observable } from 'rxjs';
 import { Filter } from './model/filter';
 import { Todo } from './model/todo';
-import { TodosDiyService } from './todos-diy.service';
+import { TodosStateService } from './services/todos-state.service';
 
 @Component({
   selector: 'my-app',
@@ -16,7 +15,7 @@ export class AppComponent {
   selectedTodo$: Observable<Todo> = this.todosService.selectedTodo$;
   filter$: Observable<Filter> = this.todosService.filter$;
 
-  constructor(private todosService: TodosDiyService) {}
+  constructor(private todosService: TodosStateService) {}
 
   selectTodo(todo: Todo) {
     this.todosService.selectTodo(todo);

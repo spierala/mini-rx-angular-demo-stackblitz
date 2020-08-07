@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Todo } from '../model/todo';
-import { TodosDiyService } from '../todos-diy.service';
+import { TodosStateService } from '../services/todos-state.service';
 
 @Component({
   selector: 'app-todo-detail',
@@ -12,7 +12,7 @@ export class TodoDetailComponent implements OnInit {
   @Input()
   todo: Todo;
 
-  constructor(private todosService: TodosDiyService) {}
+  constructor(private todosService: TodosStateService) {}
 
   ngOnInit() {}
 
