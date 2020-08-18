@@ -15,7 +15,7 @@ export class StateService<T> {
     return this.state$.pipe(
       map((state: T) => mapFn(state)),
       distinctUntilChanged(),
-      shareReplay(1) // TODO: Is this a good idea?
+      // shareReplay(1) // TODO: Is this a good idea?
     );
   }
 
