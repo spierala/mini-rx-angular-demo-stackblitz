@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { distinctUntilChanged, map, shareReplay } from 'rxjs/operators';
 
 export class StateService<T> {
   private state$: BehaviorSubject<T>;
@@ -14,7 +14,8 @@ export class StateService<T> {
   protected select<K>(mapFn: (state: T) => K): Observable<K> {
     return this.state$.pipe(
       map((state: T) => mapFn(state)),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      shareReplay(1) // TODO: Is this a good idea?
     );
   }
 
