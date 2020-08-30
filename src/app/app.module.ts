@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { TodosData } from './services/api/todos-data';
 import { HttpClientModule } from '@angular/common/http';
 import { TodoDetailComponent } from './todo-detail/todo-detail.component';
-import { NgReduxDevtoolsModule } from 'mini-rx-ng-devtools';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { FilterComponent } from './filter/filter.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -21,11 +20,6 @@ import { TodoListComponent } from './todo-list/todo-list.component';
     ReactiveFormsModule,
     HttpClientModule,
     HttpClientInMemoryWebApiModule.forRoot(TodosData, { delay: 500, put204: false }),
-    NgReduxDevtoolsModule.instrument({
-      name: 'Stackblitz Angular MiniRx Todos Showcase',
-      maxAge: 25,
-      latency: 1000,
-    }),
     MatSidenavModule,
   ],
   declarations: [AppComponent, TodoDetailComponent, FilterComponent, TodoListComponent],
