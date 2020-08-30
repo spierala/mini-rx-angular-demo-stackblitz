@@ -3,7 +3,7 @@ import { StateService } from './state.service';
 import { Todo } from '../model/todo';
 import { Filter } from '../model/filter';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 import { TodosApiService } from './api/todos-api.service';
 
 interface TodoState {
@@ -39,16 +39,19 @@ export class TodosStateService extends StateService<TodoState> {
   );
   filter$: Observable<Filter> = this.select((state) => state.filter);
   selectedTodo$: Observable<Todo> = this.select((state) => {
-    console.log('selectedTodo$ callback')
+    console.log('selectedTodo$ callback');
     if (state.selectedTodoId === 0) {
       return new Todo();
     }
     return state.todos.find((item) => item.id === state.selectedTodoId);
-  });
+  }).pipe(
+    // Multicast to prevent multiple executions due to multiple subscribers
+    shareReplay({ refCount: true, bufferSize: 1 })
+  );
 
   constructor(private apiService: TodosApiService) {
     super(initialState);
-    this.load();
+    this.load(); // TODO trigger load in component?
   }
 
   selectTodo(todo: Todo) {
