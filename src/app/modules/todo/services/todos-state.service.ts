@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StateService } from './state.service';
-import { Todo } from '../model/todo';
-import { Filter } from '../model/filter';
+import { Todo } from '../models/todo';
+import { Filter } from '../models/filter';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { TodosApiService } from './api/todos-api.service';
