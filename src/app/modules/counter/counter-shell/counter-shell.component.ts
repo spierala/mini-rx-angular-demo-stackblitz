@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
   selector: 'app-counter-shell',
   templateUrl: './counter-shell.component.html',
   styleUrls: ['./counter-shell.component.css'],
+  host: {'class': 'd-flex w-100 h-100'},
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CounterShellComponent {
