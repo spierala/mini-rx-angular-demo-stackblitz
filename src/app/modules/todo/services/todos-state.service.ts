@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { StateService } from './state.service';
+import { StateService } from '../../../shared/state.service';
 import { Todo } from '../models/todo';
 import { Filter } from '../models/filter';
 import { Observable } from 'rxjs';

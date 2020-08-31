@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Todo } from '../../models/todo';
 import { TodosStateService } from '../../services/todos-state.service';
@@ -7,6 +7,7 @@ import { TodosStateService } from '../../services/todos-state.service';
   selector: 'app-todo-detail',
   templateUrl: './todo-detail.component.html',
   styleUrls: ['./todo-detail.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TodoDetailComponent implements OnInit {
   @Input()

@@ -7,6 +7,7 @@ import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { TodoModule } from './modules/todo/todo.module';
+import { CounterModule } from './modules/counter/counter.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { TodoModule } from './modules/todo/todo.module';
     HttpClientModule,
     HttpClientInMemoryWebApiModule.forRoot(TodosData, { delay: 500, put204: false }),
     AppRoutingModule,
-    TodoModule
+    TodoModule,
+    CounterModule
   ],
   declarations: [AppComponent],
   bootstrap: [AppComponent],

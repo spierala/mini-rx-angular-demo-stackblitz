@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Todo } from '../../models/todo';
 import { Filter } from '../../models/filter';
@@ -7,27 +7,28 @@ import { TodosStateService } from '../../services/todos-state.service';
 @Component({
   selector: 'app-todo-shell',
   templateUrl: './todo-shell.component.html',
-  styleUrls: ['./todo-shell.component.css']
+  styleUrls: ['./todo-shell.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TodoShellComponent {
 
-  todosDone$: Observable<Todo[]> = this.todosService.todosDone$;
-  todosNotDone$: Observable<Todo[]> = this.todosService.todosNotDone$;
-  selectedTodo$: Observable<Todo> = this.todosService.selectedTodo$;
-  filter$: Observable<Filter> = this.todosService.filter$;
+  todosDone$: Observable<Todo[]> = this.todosState.todosDone$;
+  todosNotDone$: Observable<Todo[]> = this.todosState.todosNotDone$;
+  selectedTodo$: Observable<Todo> = this.todosState.selectedTodo$;
+  filter$: Observable<Filter> = this.todosState.filter$;
 
-  constructor(private todosService: TodosStateService) {}
+  constructor(private todosState: TodosStateService) {}
 
   selectTodo(todo: Todo) {
-    this.todosService.selectTodo(todo);
+    this.todosState.selectTodo(todo);
   }
 
   addTodo() {
-    this.todosService.initNewTodo();
+    this.todosState.initNewTodo();
   }
 
   onFilterUpdate(filter: Filter) {
-    this.todosService.updateFilter(filter);
+    this.todosState.updateFilter(filter);
   }
 
 }
