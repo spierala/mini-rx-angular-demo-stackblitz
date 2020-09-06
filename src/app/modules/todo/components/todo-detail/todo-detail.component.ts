@@ -1,18 +1,19 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { TodosService } from '../todos.service';
-import { Todo } from '../model/todo';
+import { Todo } from '../../models/todo';
+import { TodosStateService } from '../../services/todos-state.service';
 
 @Component({
   selector: 'app-todo-detail',
   templateUrl: './todo-detail.component.html',
   styleUrls: ['./todo-detail.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TodoDetailComponent implements OnInit {
   @Input()
   todo: Todo;
 
-  constructor(private todosService: TodosService) {}
+  constructor(private todosService: TodosStateService) {}
 
   ngOnInit() {}
 

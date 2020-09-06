@@ -1,31 +1,17 @@
-import { Component } from '@angular/core';
-import { TodosService } from './todos.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Filter } from './model/filter';
-import { Todo } from './model/todo';
+import { CounterStateService } from './modules/counter/counter-state.service';
 
 @Component({
   selector: 'my-app',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
-  todosDone$: Observable<Todo[]> = this.todosService.todosDone$;
-  todosNotDone$: Observable<Todo[]> = this.todosService.todosNotDone$;
-  selectedTodo$: Observable<Todo> = this.todosService.selectedTodo$;
-  filter$: Observable<Filter> = this.todosService.filter$;
+  counter$: Observable<number> = this.counterState.$count;
 
-  constructor(private todosService: TodosService) {}
-
-  selectTodo(todo: Todo) {
-    this.todosService.selectTodo(todo);
-  }
-
-  addTodo() {
-    this.todosService.initNewTodo();
-  }
-
-  onFilterUpdate(filter: Filter) {
-    this.todosService.updateFilter(filter);
-  }
+  constructor(
+    private counterState: CounterStateService
+  ) { }
 }
