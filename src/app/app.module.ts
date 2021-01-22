@@ -8,7 +8,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { TodoModule } from './modules/todo/todo.module';
 import { CounterModule } from './modules/counter/counter.module';
-import { NgReduxDevtoolsModule } from 'mini-rx-ng-devtools';
+import { StoreDevtoolsModule, StoreModule } from 'mini-rx-store-ng';
+import { ImmutableStateExtension } from 'mini-rx-store';
 
 @NgModule({
   imports: [
@@ -19,10 +20,13 @@ import { NgReduxDevtoolsModule } from 'mini-rx-ng-devtools';
     AppRoutingModule,
     TodoModule,
     CounterModule,
-    NgReduxDevtoolsModule.instrument({
+    StoreModule.forRoot({
+      extensions: [new ImmutableStateExtension()]
+    }),
+    StoreDevtoolsModule.instrument({
       name: 'Stackblitz Angular MiniRx Todos Showcase',
       maxAge: 25,
-      latency: 1000,
+      latency: 250,
     }),
   ],
   declarations: [AppComponent],

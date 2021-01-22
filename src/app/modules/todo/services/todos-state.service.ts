@@ -4,7 +4,7 @@ import { Filter } from '../models/filter';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { TodosApiService } from './api/todos-api.service';
-import { Feature } from 'mini-rx-store';
+import { FeatureStore } from 'mini-rx-store';
 
 interface TodoState {
   todos: Todo[];
@@ -27,7 +27,7 @@ const initialState: TodoState = {
 @Injectable({
   providedIn: 'root',
 })
-export class TodosStateService extends Feature<TodoState> {
+export class TodosStateService extends FeatureStore<TodoState> {
   private todosFiltered$: Observable<Todo[]> = this.select((state) => {
     return getTodosFiltered(state.todos, state.filter);
   });
