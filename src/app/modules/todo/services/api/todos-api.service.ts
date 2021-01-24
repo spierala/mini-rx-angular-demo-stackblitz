@@ -16,10 +16,10 @@ export class TodosApiService {
     return this.http.get<Todo[]>(apiUrl);
   }
 
-  createTodo(todo: Todo): Observable<Todo> {
+  createTodo(todo: Todo, apiFail: boolean): Observable<Todo> {
     return this.http.post<Todo>(apiUrl, todo).pipe(
       map((value) => {
-        if (Math.random() > 0.5) {
+        if (apiFail) {
           throw new Error('simulated API error');
         }
         return value;

@@ -81,7 +81,10 @@ export class TodosStateService extends FeatureStore<TodoState> {
   }
 
   clearSelectedTodo() {
-    this.setState({ selectedTodoId: undefined }, 'clearSelectedTodo');
+    this.setState({
+      selectedTodoId: undefined,
+      newTodo: undefined
+    }, 'clearSelectedTodo');
   }
 
   updateFilter(filter: Filter) {
@@ -107,14 +110,14 @@ export class TodosStateService extends FeatureStore<TodoState> {
   });
 
   // ... with effect and optimistic update / undo
-  create = this.effect<Todo>(
+  create = this.effect<{ todo: Todo, apiFail: boolean }>(
     // FYI: we can skip the $payload pipe when using just one RxJS operator
-    mergeMap((todo) => {
+    mergeMap(({ todo, apiFail} ) => {
       const optimisticUpdate: Action = this.setState({
         todos: [...this.state.todos, todo]
       }, 'createOptimistic');
 
-      return this.apiService.createTodo(todo).pipe(
+      return this.apiService.createTodo(todo, apiFail).pipe(
         tap(newTodo => {
           this.setState(state => ({
             todos: state.todos.map(item => item === todo ? {

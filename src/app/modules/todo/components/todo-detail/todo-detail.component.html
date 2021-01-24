@@ -11,6 +11,7 @@
                     class="form-control"
                     type="text"
                     [ngModel]="todo.title"
+                    required
                     name="title"
                     placeholder="Name (required)"
                 />
@@ -40,6 +41,12 @@
             >
                 Save
             </button>
+            <div  *ngIf="!todo.id"  class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="apiFail" name="apiFail" ngModel>
+                <label class="form-check-label text-secondary" for="apiFail">
+                    Let API call fail (to simulate undo of optimistic update)
+                </label>
+            </div>
             <button *ngIf="todo.id" class="btn btn-primary btn-danger" (click)="delete()">Delete</button>
         </form>
     </div>

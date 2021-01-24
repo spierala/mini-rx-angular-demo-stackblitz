@@ -26,7 +26,7 @@ export class TodoDetailComponent implements OnInit {
     if (newTodo.id) {
       this.todosService.update(newTodo);
     } else {
-      this.todosService.create(newTodo);
+      this.todosService.create({ todo: newTodo, apiFail: form.value.apiFail });
     }
   }
 
