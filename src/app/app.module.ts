@@ -9,7 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { TodoModule } from './modules/todo/todo.module';
 import { CounterModule } from './modules/counter/counter.module';
 import { StoreDevtoolsModule, StoreModule } from 'mini-rx-store-ng';
-import { ImmutableStateExtension } from 'mini-rx-store';
+import { ImmutableStateExtension, UndoExtension } from 'mini-rx-store';
 
 @NgModule({
   imports: [
@@ -21,7 +21,10 @@ import { ImmutableStateExtension } from 'mini-rx-store';
     TodoModule,
     CounterModule,
     StoreModule.forRoot({
-      extensions: [new ImmutableStateExtension()]
+      extensions: [
+        new ImmutableStateExtension(),
+        new UndoExtension()
+      ]
     }),
     StoreDevtoolsModule.instrument({
       name: 'Stackblitz Angular MiniRx Todos Showcase',

@@ -1,17 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
 import { Filter } from '../models/filter';
-import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { EMPTY, Observable } from 'rxjs';
+import { catchError, mergeMap, shareReplay, tap } from 'rxjs/operators';
 import { TodosApiService } from './api/todos-api.service';
-import { FeatureStore } from 'mini-rx-store';
+import { Action, createFeatureSelector, createSelector, FeatureStore } from 'mini-rx-store';
 
+// STATE INTERFACE
 interface TodoState {
   todos: Todo[];
   selectedTodoId: number;
   filter: Filter;
+  newTodo: Todo; // Used when creating a new Todo
 }
 
+// INITIAL STATE
 const initialState: TodoState = {
   todos: [],
   selectedTodoId: undefined,
@@ -19,31 +22,45 @@ const initialState: TodoState = {
     search: '',
     category: {
       isBusiness: false,
-      isPrivate: false,
-    },
+      isPrivate: false
+    }
   },
+  newTodo: undefined
 };
 
+// MEMOIZED SELECTORS
+const getTodosFeatureSelector = createFeatureSelector<TodoState>();
+const getTodos = createSelector(getTodosFeatureSelector, state => state.todos);
+const getFilter = createSelector(getTodosFeatureSelector, state => state.filter);
+const getTodosFiltered = createSelector(getTodos, getFilter, (todos, filter) => {
+  return todos.filter((item) => {
+    return (
+      item.title.toUpperCase().indexOf(filter.search.toUpperCase()) > -1 &&
+      (filter.category.isBusiness ? item.isBusiness : true) &&
+      (filter.category.isPrivate ? item.isPrivate : true)
+    );
+  });
+});
+const getTodosDone = createSelector(getTodosFiltered, todos => todos.filter((todo) => todo.isDone));
+const getTodosNotDone = createSelector(getTodosFiltered, todos => todos.filter((todo) => !todo.isDone));
+const getNewTodo = createSelector(getTodosFeatureSelector, state => state.newTodo);
+const getSelectedTodoId = createSelector(getTodosFeatureSelector, state => state.selectedTodoId);
+const getSelectedTodo = createSelector(getTodos, getSelectedTodoId, getNewTodo, (todos, selectedTodoId, newTodo) => {
+  if (newTodo) {
+    return newTodo;
+  }
+  return todos.find((item) => item.id === selectedTodoId);
+});
+
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class TodosStateService extends FeatureStore<TodoState> {
-  private todosFiltered$: Observable<Todo[]> = this.select((state) => {
-    return getTodosFiltered(state.todos, state.filter);
-  });
-  todosDone$: Observable<Todo[]> = this.todosFiltered$.pipe(
-    map((todos) => todos.filter((todo) => todo.isDone))
-  );
-  todosNotDone$: Observable<Todo[]> = this.todosFiltered$.pipe(
-    map((todos) => todos.filter((todo) => !todo.isDone))
-  );
-  filter$: Observable<Filter> = this.select((state) => state.filter);
-  selectedTodo$: Observable<Todo> = this.select((state) => {
-    if (state.selectedTodoId === 0) {
-      return new Todo();
-    }
-    return state.todos.find((item) => item.id === state.selectedTodoId);
-  }).pipe(
+  // STATE OBSERVABLES
+  todosDone$: Observable<Todo[]> = this.select(getTodosDone);
+  todosNotDone$: Observable<Todo[]> = this.select(getTodosNotDone);
+  filter$: Observable<Filter> = this.select(getFilter);
+  selectedTodo$: Observable<Todo> = this.select(getSelectedTodo).pipe(
     // Multicast to prevent multiple executions due to multiple subscribers
     shareReplay({ refCount: true, bufferSize: 1 })
   );
@@ -54,12 +71,13 @@ export class TodosStateService extends FeatureStore<TodoState> {
     this.load();
   }
 
+  // UPDATE STATE
   selectTodo(todo: Todo) {
     this.setState({ selectedTodoId: todo.id }, 'selectTodo');
   }
 
   initNewTodo() {
-    this.setState({ selectedTodoId: 0 }, 'initNewTodo');
+    this.setState({ newTodo: new Todo(), selectedTodoId: undefined }, 'initNewTodo');
   }
 
   clearSelectedTodo() {
@@ -70,49 +88,66 @@ export class TodosStateService extends FeatureStore<TodoState> {
     this.setState({
       filter: {
         ...this.state.filter,
-        ...filter,
-      },
+        ...filter
+      }
     }, 'updateFilter');
   }
 
-  // API CALLS
-  load() {
-    this.apiService.getTodos().subscribe((todos) => this.setState({ todos }, 'apiLoadSuccess'));
-  }
+  // API CALLS...
+  // ...with effect
+  load = this.effect(payload$ => {
+    return payload$.pipe(
+      mergeMap(
+        () => this.apiService.getTodos().pipe(
+          tap(todos => this.setState({ todos }, 'loadSuccess')),
+          catchError(() => EMPTY)
+        )
+      )
+    );
+  });
 
-  create(todo: Todo) {
-    this.apiService.createTodo(todo).subscribe((newTodo) => {
-      this.setState({
-        todos: [...this.state.todos, newTodo],
-        selectedTodoId: newTodo.id,
-      }, 'apiCreateSuccess');
-    });
-  }
+  // ... with effect and optimistic update / undo
+  create = this.effect<Todo>(
+    // FYI: we can skip the $payload pipe when using just one RxJS operator
+    mergeMap((todo) => {
+      const optimisticUpdate: Action = this.setState({
+        todos: [...this.state.todos, todo]
+      }, 'optimistic create');
 
+      return this.apiService.createTodo(todo).pipe(
+        tap(newTodo => {
+          this.setState(state => ({
+            todos: state.todos.map(item => item === todo ? {
+              ...item,
+              id: newTodo.id
+            } : item),
+            newTodo: undefined
+          }));
+        }),
+        catchError(() => {
+          this.undo(optimisticUpdate);
+          return EMPTY;
+        })
+      );
+    })
+  );
+
+  // ...with subscribe
   update(todo: Todo) {
     this.apiService.updateTodo(todo).subscribe((updatedTodo) => {
       this.setState({
-        todos: this.state.todos.map((item) => (item.id === todo.id ? updatedTodo : item)),
-      }, 'apiUpdateSuccess');
+        todos: this.state.todos.map((item) => (item.id === todo.id ? updatedTodo : item))
+      }, 'updateSuccess');
     });
   }
 
+  // ...with subscribe
   delete(todo: Todo) {
     this.apiService.deleteTodo(todo).subscribe(() => {
       this.setState({
         selectedTodoId: undefined,
-        todos: this.state.todos.filter((item) => item.id !== todo.id),
-      }, 'apiDeleteSuccess');
+        todos: this.state.todos.filter((item) => item.id !== todo.id)
+      }, 'deleteSuccess');
     });
   }
-}
-
-function getTodosFiltered(todos, filter): Todo[] {
-  return todos.filter((item) => {
-    return (
-      item.title.toUpperCase().indexOf(filter.search.toUpperCase()) > -1 &&
-      (filter.category.isBusiness ? item.isBusiness : true) &&
-      (filter.category.isPrivate ? item.isPrivate : true)
-    );
-  });
 }
