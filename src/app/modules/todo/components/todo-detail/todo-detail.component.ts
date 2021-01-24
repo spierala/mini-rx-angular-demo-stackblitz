@@ -7,19 +7,11 @@ import { TodosStateService } from '../../services/todos-state.service';
   selector: 'app-todo-detail',
   templateUrl: './todo-detail.component.html',
   styleUrls: ['./todo-detail.component.css'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TodoDetailComponent implements OnInit {
-  private _todo: Todo;
-
   @Input()
-  set todo(t: Todo) {
-    this._todo = t;
-  };
-
-  get todo() : Todo {
-    return this._todo
-  }
+  todo: Todo;
 
   constructor(private todosService: TodosStateService) {}
 

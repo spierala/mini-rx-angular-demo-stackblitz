@@ -112,7 +112,7 @@ export class TodosStateService extends FeatureStore<TodoState> {
     mergeMap((todo) => {
       const optimisticUpdate: Action = this.setState({
         todos: [...this.state.todos, todo]
-      }, 'optimistic create');
+      }, 'createOptimistic');
 
       return this.apiService.createTodo(todo).pipe(
         tap(newTodo => {
@@ -122,7 +122,7 @@ export class TodosStateService extends FeatureStore<TodoState> {
               id: newTodo.id
             } : item),
             newTodo: undefined
-          }));
+          }), 'createSuccess');
         }),
         catchError(() => {
           this.undo(optimisticUpdate);

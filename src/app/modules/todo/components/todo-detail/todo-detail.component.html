@@ -7,13 +7,10 @@
         <form #form="ngForm">
             <div class="form-group">
                 <label>Title</label>
-                {{tst.control.errors |json}}
                 <input
-                        #tst = "ngModel"
                     class="form-control"
                     type="text"
                     [ngModel]="todo.title"
-                    required
                     name="title"
                     placeholder="Name (required)"
                 />
