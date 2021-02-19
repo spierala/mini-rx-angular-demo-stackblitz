@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
 import { Filter } from '../models/filter';
 import { EMPTY, Observable } from 'rxjs';
-import { catchError, mergeMap, shareReplay, tap } from 'rxjs/operators';
+import { catchError, mergeMap, tap } from 'rxjs/operators';
 import { TodosApiService } from './api/todos-api.service';
 import { Action, createFeatureSelector, createSelector, FeatureStore } from 'mini-rx-store';
 
@@ -60,10 +60,7 @@ export class TodosStateService extends FeatureStore<TodoState> {
   todosDone$: Observable<Todo[]> = this.select(getTodosDone);
   todosNotDone$: Observable<Todo[]> = this.select(getTodosNotDone);
   filter$: Observable<Filter> = this.select(getFilter);
-  selectedTodo$: Observable<Todo> = this.select(getSelectedTodo).pipe(
-    // Multicast to prevent multiple executions due to multiple subscribers
-    shareReplay({ refCount: true, bufferSize: 1 })
-  );
+  selectedTodo$: Observable<Todo> = this.select(getSelectedTodo);
 
   constructor(private apiService: TodosApiService) {
     super('todos', initialState);
