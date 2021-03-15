@@ -1,0 +1,45 @@
+<div class="d-flex flex-column h-100">
+    <nav class="navbar navbar-light bg-light mb-4">
+        <a class="navbar-brand">
+            Todos
+        </a>
+        <div class="d-flex flex-grow-1 mb-2 justify-content-between mt-2">
+            <button class="btn btn-primary btn-sm" (click)="stateService.newProduct()">New</button>
+        </div>
+    </nav>
+
+    <div class="flex-grow-1">
+        <mat-sidenav-container class="example-container h-100">
+            <mat-sidenav
+                mode="side"
+                [opened]="stateService.selectedProduct$ | async"
+                [position]="'end'"
+                [mode]="'side'"
+            >
+                <app-product-detail
+                    *ngIf="stateService.selectedProduct$ | async as selectedProduct"
+                    [product]="selectedProduct"
+                ></app-product-detail>
+            </mat-sidenav>
+
+            <mat-sidenav-content>
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <span>Todos</span>
+                                </div>
+                                <app-product-list
+                                    [products]="stateService.products$ | async"
+                                    [selectedProduct]="stateService.selectedProduct$ | async"
+                                    (productSelect)="stateService.productSelected($event)"
+                                ></app-product-list>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-sidenav-content>
+        </mat-sidenav-container>
+    </div>
+</div>

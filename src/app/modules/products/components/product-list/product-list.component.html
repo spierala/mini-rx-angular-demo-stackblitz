@@ -1,0 +1,10 @@
+<ul class="list-group">
+    <li
+        class="list-group-item"
+        *ngFor="let product of products"
+        [ngClass]="{ active: selectedProduct?.id === product.id }"
+        (click)="productSelect.emit(product)"
+    >
+        {{ product.productName }}
+    </li>
+</ul>

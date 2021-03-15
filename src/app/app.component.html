@@ -8,7 +8,13 @@
                 <a class="nav-link" [routerLink]="'/todos'">Todos</a>
             </li>
             <li class="nav-item" [routerLinkActive]="'active'">
-                <a class="nav-link" [routerLink]="'/counter'">Counter             <span class="badge badge-light">{{counter$ | async}}</span></a>
+                <a class="nav-link" [routerLink]="'/products'">Products</a>
+            </li>
+            <li class="nav-item" [routerLinkActive]="'active'">
+                <a class="nav-link" [routerLink]="'/counter'">
+                    Counter
+                    <span class="badge badge-light">{{ counter$ | async }}</span>
+                </a>
             </li>
         </ul>
     </nav>
