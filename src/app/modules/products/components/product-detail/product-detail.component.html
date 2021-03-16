@@ -29,6 +29,28 @@
                     placeholder="Code (required)"
                 />
             </div>
+            <div class="form-group">
+                <label  for="starRatingId">Star Rating (1-5)</label>
+                <input
+                       class="form-control"
+                       id="starRatingId"
+                       type="text"
+                       placeholder="Rating"
+                       [ngModel]="product.starRating"
+                       name="starRating" />
+            </div>
+
+            <div class="form-group">
+                <label for="descriptionId">Description</label>
+                <textarea
+                      class="form-control"
+                      id="descriptionId"
+                      placeholder="Description"
+                      rows=3
+                      [ngModel]="product.description"
+                      name="description">
+                </textarea>
+            </div>
             <button
                 class="btn btn-primary mr-2"
                 (click)="submit(form)"

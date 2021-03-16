@@ -13,8 +13,14 @@ export class ProductListComponent implements OnInit {
     @Input()
     selectedProduct: Product;
 
+    @Input()
+    displayCode: boolean;
+
     @Output()
     productSelect: EventEmitter<Product> = new EventEmitter<Product>();
+
+    @Output()
+    displayCodeChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     constructor() {}
 

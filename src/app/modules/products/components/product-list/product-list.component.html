@@ -1,10 +1,25 @@
-<ul class="list-group">
-    <li
-        class="list-group-item"
-        *ngFor="let product of products"
-        [ngClass]="{ active: selectedProduct?.id === product.id }"
-        (click)="productSelect.emit(product)"
-    >
-        {{ product.productName }}
-    </li>
-</ul>
+<div class="card h-100">
+    <div class="card-header d-flex">
+        <span class="flex-grow-1">Products</span>
+        <label>
+            <input class="form-check-input"
+                   type="checkbox"
+                   [ngModel]="displayCode"
+                    (ngModelChange)="displayCodeChanged.emit($event)">
+            Display Product Code
+        </label>
+    </div>
+    <ul class="list-group">
+        <li
+            class="list-group-item"
+            *ngFor="let product of products"
+            [ngClass]="{ active: selectedProduct?.id === product.id }"
+            (click)="productSelect.emit(product)"
+        >
+            {{ product.productName }}
+            <ng-container *ngIf="displayCode">
+                ({{ product.productCode }})
+            </ng-container>
+        </li>
+    </ul>
+</div>
