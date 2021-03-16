@@ -11,7 +11,7 @@ import {
     toggleProductCode,
     updateProductFail,
     updateProductOptimistic,
-    updateProductSuccess,
+    updateProductSuccess, updateSearch
 } from './product.actions';
 import { on, reducer } from 'ts-action';
 import { Product } from '../models/product';
@@ -22,6 +22,7 @@ export interface ProductState {
     currentProductId: number | null;
     products: Product[];
     error: string;
+    search: string;
 }
 
 const initialState: ProductState = {
@@ -29,6 +30,7 @@ const initialState: ProductState = {
     currentProductId: null,
     products: [],
     error: '',
+    search: ''
 };
 
 export const productReducer = reducer<ProductState>(
@@ -90,5 +92,9 @@ export const productReducer = reducer<ProductState>(
     on(deleteProductFail, (state, { payload }) => ({
         ...state,
         error: payload,
+    })),
+    on(updateSearch, (state, { payload }) => ({
+        ...state,
+        search: payload,
     }))
 );

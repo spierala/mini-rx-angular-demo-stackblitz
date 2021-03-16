@@ -8,18 +8,20 @@ import { productReducer } from './state/product.reducer';
 import { ProductEffects } from './state/product.effects';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProductListComponent } from './components/product-list/product-list.component';
+import { ProductFilterComponent } from './components/product-filter/product-filter.component';
 
 @NgModule({
-    declarations: [ProductsShellComponent, ProductDetailComponent, ProductListComponent],
-    imports: [
-        CommonModule,
-        ProductsRoutingModule,
-        EffectsModule.register([ProductEffects]),
-        StoreModule.forFeature('products', productReducer),
-        MatSidenavModule,
-        FormsModule,
-    ],
+    declarations: [ProductsShellComponent, ProductDetailComponent, ProductListComponent, ProductFilterComponent],
+  imports: [
+    CommonModule,
+    ProductsRoutingModule,
+    EffectsModule.register([ProductEffects]),
+    StoreModule.forFeature('products', productReducer),
+    MatSidenavModule,
+    FormsModule,
+    ReactiveFormsModule
+  ]
 })
 export class ProductsModule {}

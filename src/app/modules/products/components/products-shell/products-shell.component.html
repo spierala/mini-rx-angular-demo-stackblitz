@@ -5,6 +5,7 @@
         </a>
         <div class="d-flex flex-grow-1 mb-2 justify-content-between mt-2">
             <button class="btn btn-primary btn-sm" (click)="stateService.newProduct()">New</button>
+            <app-product-filter [search]="stateService.search$ | async" (searchChanged)="stateService.updateSearch($event)"></app-product-filter>
         </div>
     </nav>
 

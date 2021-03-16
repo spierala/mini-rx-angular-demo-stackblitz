@@ -10,7 +10,7 @@ import {
     load,
     setCurrentProduct,
     toggleProductCode,
-    updateProduct,
+    updateProduct, updateSearch
 } from './product.actions';
 import { Product } from '../models/product';
 
@@ -46,14 +46,21 @@ const getProducts = createSelector(getProductFeatureState, (state) => state.prod
 
 const getError = createSelector(getProductFeatureState, (state) => state.error);
 
+const getSearch = createSelector(getProductFeatureState, (state) => state.search);
+
+const getFilteredProducts = createSelector(getProducts, getSearch, (products, search) => {
+    return products.filter(item => item.productName.toUpperCase().indexOf(search.toUpperCase()) > -1)
+})
+
 @Injectable({
     providedIn: 'root',
 })
 export class ProductStateService {
     displayCode$ = this.store.select(getShowProductCode);
     selectedProduct$ = this.store.select(getCurrentProduct);
-    products$ = this.store.select(getProducts);
+    products$ = this.store.select(getFilteredProducts);
     errorMessage$ = this.store.select(getError);
+    search$ = this.store.select(getSearch);
 
     constructor(private store: Store) {
         this.load();
@@ -89,5 +96,9 @@ export class ProductStateService {
 
     delete(product: Product): void {
         this.store.dispatch(deleteProduct(product.id));
+    }
+
+    updateSearch(search: string) {
+        this.store.dispatch(updateSearch(search));
     }
 }

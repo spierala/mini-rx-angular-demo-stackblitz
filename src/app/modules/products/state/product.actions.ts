@@ -25,3 +25,5 @@ export const createProductFail = action('[Product] Create Product Fail', payload
 export const deleteProduct = action('[Product] Delete Product', payload<number>());
 export const deleteProductSuccess = action('[Product] Delete Product Success', payload<number>());
 export const deleteProductFail = action('[Product] Delete Product Fail', payload<string>());
+
+export const updateSearch = action('[Product] Update Search', payload<string>());
