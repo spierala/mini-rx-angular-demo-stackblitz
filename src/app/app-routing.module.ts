@@ -19,6 +19,10 @@ const appRoutes: Routes = [
         component: CounterShellComponent,
     },
     { path: '', redirectTo: 'todos', pathMatch: 'full' },
+    {
+        path: 'cart',
+        loadChildren: () => import('./modules/cart/cart.module').then((m) => m.CartModule),
+    },
 ];
 
 @NgModule({

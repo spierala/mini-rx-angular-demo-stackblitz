@@ -10,20 +10,22 @@ import {
     load,
     setCurrentProduct,
     toggleProductCode,
-    updateProduct, updateSearch
+    updateProduct,
+    updateSearch,
+    addProductToCart,
+    removeProductFromCart,
 } from './product.actions';
 import { Product } from '../models/product';
+import { Observable } from 'rxjs';
+import { CartItem } from '../models/cart-item';
 
 // Selector functions
 const getProductFeatureState = createFeatureSelector<fromProducts.ProductState>('products');
-
 const getShowProductCode = createSelector(getProductFeatureState, (state) => state.showProductCode);
-
 const getCurrentProductId = createSelector(
     getProductFeatureState,
     (state) => state.currentProductId
 );
-
 const getCurrentProduct = createSelector(
     getProductFeatureState,
     getCurrentProductId,
@@ -35,32 +37,57 @@ const getCurrentProduct = createSelector(
                 productCode: 'New',
                 description: '',
                 starRating: 0,
+                price: undefined,
             };
         } else {
             return currentProductId ? state.products.find((p) => p.id === currentProductId) : null;
         }
     }
 );
-
 const getProducts = createSelector(getProductFeatureState, (state) => state.products);
-
 const getError = createSelector(getProductFeatureState, (state) => state.error);
-
 const getSearch = createSelector(getProductFeatureState, (state) => state.search);
-
 const getFilteredProducts = createSelector(getProducts, getSearch, (products, search) => {
-    return products.filter(item => item.productName.toUpperCase().indexOf(search.toUpperCase()) > -1)
-})
+    return products.filter(
+        (item) => item.productName.toUpperCase().indexOf(search.toUpperCase()) > -1
+    );
+});
+const getCartItems = createSelector(getProductFeatureState, (state) => state.cart);
+const getCartItemsWithExtraData = createSelector(
+    getProducts,
+    getCartItems,
+    (products, cartItems) => {
+        return cartItems.map((cartItem) => {
+            const foundProduct = products.find((product) => product.id === cartItem.productId);
+            return {
+                ...cartItem,
+                productName: foundProduct.productName,
+                total: foundProduct.price * cartItem.amount,
+            };
+        });
+    }
+);
+const getCartItemsAmount = createSelector(getCartItems, (cartItems) => {
+    return cartItems.length;
+});
+const getCartTotalPrice = createSelector(getCartItemsWithExtraData, (cartItemsWithExtra) =>
+    cartItemsWithExtra.reduce((previousValue: number, currentValue: CartItem) => {
+        return previousValue + currentValue.total;
+    }, 0)
+);
 
 @Injectable({
     providedIn: 'root',
 })
 export class ProductStateService {
-    displayCode$ = this.store.select(getShowProductCode);
-    selectedProduct$ = this.store.select(getCurrentProduct);
-    products$ = this.store.select(getFilteredProducts);
-    errorMessage$ = this.store.select(getError);
-    search$ = this.store.select(getSearch);
+    displayCode$: Observable<boolean> = this.store.select(getShowProductCode);
+    selectedProduct$: Observable<Product> = this.store.select(getCurrentProduct);
+    products$: Observable<Product[]> = this.store.select(getFilteredProducts);
+    errorMessage$: Observable<string> = this.store.select(getError);
+    search$: Observable<string> = this.store.select(getSearch);
+    cartItems$: Observable<CartItem[]> = this.store.select(getCartItemsWithExtraData);
+    cartItemsAmount$: Observable<number> = this.store.select(getCartItemsAmount);
+    cartTotalPrice$: Observable<number> = this.store.select(getCartTotalPrice);
 
     constructor(private store: Store) {
         this.load();
@@ -100,5 +127,13 @@ export class ProductStateService {
 
     updateSearch(search: string) {
         this.store.dispatch(updateSearch(search));
+    }
+
+    addProductToCart(product: Product) {
+        this.store.dispatch(addProductToCart(product.id));
+    }
+
+    removeProductFromCart(cartItem: CartItem) {
+        this.store.dispatch(removeProductFromCart(cartItem.productId));
     }
 }

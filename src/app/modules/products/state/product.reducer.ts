@@ -1,4 +1,5 @@
 import {
+    addProductToCart,
     clearCurrentProduct,
     createProductFail,
     createProductSuccess,
@@ -6,7 +7,7 @@ import {
     deleteProductSuccess,
     initializeCurrentProduct,
     loadFail,
-    loadSuccess,
+    loadSuccess, removeProductFromCart,
     setCurrentProduct,
     toggleProductCode,
     updateProductFail,
@@ -15,6 +16,7 @@ import {
 } from './product.actions';
 import { on, reducer } from 'ts-action';
 import { Product } from '../models/product';
+import { CartItem } from '../models/cart-item';
 
 // State for this feature (Product)
 export interface ProductState {
@@ -23,6 +25,7 @@ export interface ProductState {
     products: Product[];
     error: string;
     search: string;
+    cart: CartItem[];
 }
 
 const initialState: ProductState = {
@@ -30,7 +33,8 @@ const initialState: ProductState = {
     currentProductId: null,
     products: [],
     error: '',
-    search: ''
+    search: '',
+    cart: []
 };
 
 export const productReducer = reducer<ProductState>(
@@ -96,5 +100,21 @@ export const productReducer = reducer<ProductState>(
     on(updateSearch, (state, { payload }) => ({
         ...state,
         search: payload,
+    })),
+    on(addProductToCart, (state, { payload }) => ({
+        ...state,
+        cart: addOrUpdateCartItem(state.cart, payload)
+    })),
+    on(removeProductFromCart, (state, { payload }) => ({
+        ...state,
+        cart: state.cart.filter(item => item.productId !== payload)
     }))
 );
+
+function addOrUpdateCartItem(items: CartItem[], productId: number): CartItem[] {
+    const itemExists = items.some(item => (item.productId === productId));
+    if (itemExists) {
+        return items.map(item => item.productId === productId ? {...item, amount: item.amount + 1} : item)
+    }
+    return [...items, {productId, amount: 1}];
+}

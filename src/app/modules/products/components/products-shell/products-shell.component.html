@@ -5,7 +5,10 @@
         </a>
         <div class="d-flex flex-grow-1 mb-2 justify-content-between mt-2">
             <button class="btn btn-primary btn-sm" (click)="stateService.newProduct()">New</button>
-            <app-product-filter [search]="stateService.search$ | async" (searchChanged)="stateService.updateSearch($event)"></app-product-filter>
+            <app-product-filter
+                [search]="stateService.search$ | async"
+                (searchChanged)="stateService.updateSearch($event)"
+            ></app-product-filter>
         </div>
     </nav>
 
@@ -32,7 +35,8 @@
                                 [selectedProduct]="stateService.selectedProduct$ | async"
                                 [displayCode]="stateService.displayCode$ | async"
                                 (productSelect)="stateService.productSelected($event)"
-                                (displayCodeChanged)="stateService.toggleProductCode($event)"
+                                (displayCodeChange)="stateService.toggleProductCode($event)"
+                                (addToCart)="stateService.addProductToCart($event)"
                             ></app-product-list>
                         </div>
                     </div>

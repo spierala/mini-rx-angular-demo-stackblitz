@@ -5,7 +5,7 @@
             <input class="form-check-input"
                    type="checkbox"
                    [ngModel]="displayCode"
-                    (ngModelChange)="displayCodeChanged.emit($event)">
+                    (ngModelChange)="displayCodeChange.emit($event)">
             Display Product Code
         </label>
     </div>
@@ -20,6 +20,7 @@
             <ng-container *ngIf="displayCode">
                 ({{ product.productCode }})
             </ng-container>
+            <button class="btn btn-sm btn-primary" (click)="$event.stopPropagation(); addToCart.emit(product);">Add To Cart</button>
         </li>
     </ul>
 </div>

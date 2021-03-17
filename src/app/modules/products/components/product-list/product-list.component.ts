@@ -20,7 +20,10 @@ export class ProductListComponent implements OnInit {
     productSelect: EventEmitter<Product> = new EventEmitter<Product>();
 
     @Output()
-    displayCodeChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+    displayCodeChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    @Output()
+    addToCart: EventEmitter<Product> = new EventEmitter<Product>();
 
     constructor() {}
 

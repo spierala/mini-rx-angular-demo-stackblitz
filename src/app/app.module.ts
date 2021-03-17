@@ -10,6 +10,7 @@ import { TodoModule } from './modules/todo/todo.module';
 import { CounterModule } from './modules/counter/counter.module';
 import { StoreDevtoolsModule, StoreModule } from 'mini-rx-store-ng';
 import { ImmutableStateExtension, UndoExtension } from 'mini-rx-store';
+import { ProductStateModule } from './modules/products/state/product-state.module';
 
 @NgModule({
     imports: [
@@ -28,6 +29,7 @@ import { ImmutableStateExtension, UndoExtension } from 'mini-rx-store';
             maxAge: 25,
             latency: 250,
         }),
+        ProductStateModule,
     ],
     declarations: [AppComponent],
     bootstrap: [AppComponent],
