@@ -57,18 +57,25 @@ const getCartItemsWithExtraData = createSelector(
     getProducts,
     getCartItems,
     (products, cartItems) => {
-        return cartItems.map((cartItem) => {
+        return cartItems.reduce((accumulated, cartItem) => {
             const foundProduct = products.find((product) => product.id === cartItem.productId);
-            return {
-                ...cartItem,
-                productName: foundProduct.productName,
-                total: foundProduct.price * cartItem.amount,
-            };
-        });
+            if (foundProduct) {
+                const newCartItem: CartItem = {
+                    ...cartItem,
+                    productName: foundProduct.productName,
+                    total: foundProduct.price * cartItem.amount,
+                };
+                return [...accumulated, newCartItem];
+            }
+            return accumulated;
+        }, []);
     }
 );
 const getCartItemsAmount = createSelector(getCartItems, (cartItems) => {
     return cartItems.length;
+});
+const getHasCartItems = createSelector(getCartItemsAmount, (amount) => {
+    return amount > 0;
 });
 const getCartTotalPrice = createSelector(getCartItemsWithExtraData, (cartItemsWithExtra) =>
     cartItemsWithExtra.reduce((previousValue: number, currentValue: CartItem) => {
@@ -88,6 +95,7 @@ export class ProductStateService {
     cartItems$: Observable<CartItem[]> = this.store.select(getCartItemsWithExtraData);
     cartItemsAmount$: Observable<number> = this.store.select(getCartItemsAmount);
     cartTotalPrice$: Observable<number> = this.store.select(getCartTotalPrice);
+    hasCartItems$: Observable<boolean> = this.store.select(getHasCartItems);
 
     constructor(private store: Store) {
         this.load();

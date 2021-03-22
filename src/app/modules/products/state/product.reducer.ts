@@ -7,12 +7,14 @@ import {
     deleteProductSuccess,
     initializeCurrentProduct,
     loadFail,
-    loadSuccess, removeProductFromCart,
+    loadSuccess,
+    removeProductFromCart,
     setCurrentProduct,
     toggleProductCode,
     updateProductFail,
     updateProductOptimistic,
-    updateProductSuccess, updateSearch
+    updateProductSuccess,
+    updateSearch,
 } from './product.actions';
 import { on, reducer } from 'ts-action';
 import { Product } from '../models/product';
@@ -34,7 +36,12 @@ const initialState: ProductState = {
     products: [],
     error: '',
     search: '',
-    cart: []
+    cart: [
+        {
+            productId: 1,
+            amount: 1,
+        },
+    ],
 };
 
 export const productReducer = reducer<ProductState>(
@@ -103,18 +110,20 @@ export const productReducer = reducer<ProductState>(
     })),
     on(addProductToCart, (state, { payload }) => ({
         ...state,
-        cart: addOrUpdateCartItem(state.cart, payload)
+        cart: addOrUpdateCartItem(state.cart, payload),
     })),
     on(removeProductFromCart, (state, { payload }) => ({
         ...state,
-        cart: state.cart.filter(item => item.productId !== payload)
+        cart: state.cart.filter((item) => item.productId !== payload),
     }))
 );
 
 function addOrUpdateCartItem(items: CartItem[], productId: number): CartItem[] {
-    const itemExists = items.some(item => (item.productId === productId));
+    const itemExists = items.some((item) => item.productId === productId);
     if (itemExists) {
-        return items.map(item => item.productId === productId ? {...item, amount: item.amount + 1} : item)
+        return items.map((item) =>
+            item.productId === productId ? { ...item, amount: item.amount + 1 } : item
+        );
     }
-    return [...items, {productId, amount: 1}];
+    return [...items, { productId, amount: 1 }];
 }
