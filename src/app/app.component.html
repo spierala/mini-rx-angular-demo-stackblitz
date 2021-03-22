@@ -24,6 +24,9 @@
                     <span class="badge badge-light">{{ counter$ | async }}</span>
                 </a>
             </li>
+            <li class="nav-item" [routerLinkActive]="'active'">
+                <a class="nav-link" [routerLink]="'/user'">User</a>
+            </li>
         </ul>
     </nav>
     <div class="flex-grow-1">

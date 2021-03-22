@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductStateService } from '../../state/product-state.service';
+import { UserStateService } from '../../../user/state/user-state.service';
 
 @Component({
     selector: 'app-products',
@@ -7,7 +8,7 @@ import { ProductStateService } from '../../state/product-state.service';
     styleUrls: ['./products-shell.component.css'],
 })
 export class ProductsShellComponent implements OnInit {
-    constructor(private stateService: ProductStateService) {}
+    constructor(public productState: ProductStateService, public userState: UserStateService) {}
 
     ngOnInit(): void {}
 }

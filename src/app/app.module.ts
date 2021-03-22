@@ -11,6 +11,7 @@ import { CounterModule } from './modules/counter/counter.module';
 import { StoreDevtoolsModule, StoreModule } from 'mini-rx-store-ng';
 import { ImmutableStateExtension, UndoExtension } from 'mini-rx-store';
 import { ProductStateModule } from './modules/products/state/product-state.module';
+import { UserModule } from './modules/user/user.module';
 
 @NgModule({
     imports: [
@@ -21,6 +22,7 @@ import { ProductStateModule } from './modules/products/state/product-state.modul
         AppRoutingModule,
         TodoModule,
         CounterModule,
+        UserModule,
         StoreModule.forRoot({
             extensions: [new ImmutableStateExtension(), new UndoExtension()],
         }),

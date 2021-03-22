@@ -7,7 +7,7 @@
     </div>
     <div class="card-body">
         <form #form="ngForm">
-            <fieldset disabled>
+            <fieldset [disabled]="!(userState.isAdmin$ | async)">
                 <div class="form-group">
                     <label>Name</label>
                     <input
@@ -65,16 +65,22 @@
                     ></textarea>
                 </div>
             </fieldset>
-            <button
-                class="btn btn-primary mr-2"
-                (click)="submit(form)"
-                [disabled]="!form.valid || !form.dirty"
-            >
-                Save
-            </button>
-            <button *ngIf="product.id" class="btn btn-primary btn-danger" (click)="delete(product)">
-                Delete
-            </button>
+            <ng-container *ngIf="userState.isAdmin$ | async">
+                <button
+                    class="btn btn-primary mr-2"
+                    (click)="submit(form)"
+                    [disabled]="!form.valid || !form.dirty"
+                >
+                    Save
+                </button>
+                <button
+                    *ngIf="product.id"
+                    class="btn btn-primary btn-danger"
+                    (click)="delete(product)"
+                >
+                    Delete
+                </button>
+            </ng-container>
         </form>
     </div>
 </div>

@@ -4,10 +4,10 @@
             Products
         </a>
         <div class="d-flex flex-grow-1 mb-2 justify-content-between mt-2">
-            <button class="btn btn-primary btn-sm" (click)="stateService.newProduct()">New</button>
+            <button class="btn btn-primary btn-sm" (click)="productState.newProduct()">New</button>
             <app-product-filter
-                [search]="stateService.search$ | async"
-                (searchChanged)="stateService.updateSearch($event)"
+                [search]="productState.search$ | async"
+                (searchChanged)="productState.updateSearch($event)"
             ></app-product-filter>
         </div>
     </nav>
@@ -16,12 +16,12 @@
         <mat-sidenav-container class="example-container h-100">
             <mat-sidenav
                 mode="side"
-                [opened]="stateService.selectedProduct$ | async"
+                [opened]="productState.selectedProduct$ | async"
                 [position]="'end'"
                 [mode]="'side'"
             >
                 <app-product-detail
-                    *ngIf="stateService.selectedProduct$ | async as selectedProduct"
+                    *ngIf="productState.selectedProduct$ | async as selectedProduct"
                     [product]="selectedProduct"
                 ></app-product-detail>
             </mat-sidenav>
@@ -31,12 +31,13 @@
                     <div class="row">
                         <div class="col">
                             <app-product-list
-                                [products]="stateService.products$ | async"
-                                [selectedProduct]="stateService.selectedProduct$ | async"
-                                [displayCode]="stateService.displayCode$ | async"
-                                (productSelect)="stateService.productSelected($event)"
-                                (displayCodeChange)="stateService.toggleProductCode($event)"
-                                (addToCart)="stateService.addProductToCart($event)"
+                                [products]="productState.products$ | async"
+                                [selectedProduct]="productState.selectedProduct$ | async"
+                                [displayCode]="productState.displayCode$ | async"
+                                [showCartBtn]="!(userState.isAdmin$ | async)"
+                                (productSelect)="productState.productSelected($event)"
+                                (displayCodeChange)="productState.toggleProductCode($event)"
+                                (addToCart)="productState.addProductToCart($event)"
                             ></app-product-list>
                         </div>
                     </div>

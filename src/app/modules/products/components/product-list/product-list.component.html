@@ -27,6 +27,7 @@
             </div>
 
             <span
+                *ngIf="showCartBtn"
                 class="btn bi bi-cart-plus-fill text-primary"
                 (click)="$event.stopPropagation(); addToCart.emit(product)"
             ></span>

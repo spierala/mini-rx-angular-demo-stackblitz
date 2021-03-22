@@ -16,6 +16,9 @@ export class ProductListComponent implements OnInit {
     @Input()
     displayCode: boolean;
 
+    @Input()
+    showCartBtn: boolean;
+
     @Output()
     productSelect: EventEmitter<Product> = new EventEmitter<Product>();
 

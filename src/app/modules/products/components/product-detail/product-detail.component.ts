@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Product } from '../../models/product';
 import { NgForm } from '@angular/forms';
 import { ProductStateService } from '../../state/product-state.service';
+import { UserStateService } from '../../../user/state/user-state.service';
 
 @Component({
     selector: 'app-product-detail',
@@ -12,12 +13,12 @@ export class ProductDetailComponent implements OnInit {
     @Input()
     product: Product;
 
-    constructor(private stateService: ProductStateService) {}
+    constructor(private productState: ProductStateService, private userState: UserStateService) {}
 
     ngOnInit(): void {}
 
     onClose() {
-        this.stateService.clearProduct();
+        this.productState.clearProduct();
     }
 
     submit(form: NgForm) {
@@ -27,13 +28,13 @@ export class ProductDetailComponent implements OnInit {
         };
 
         if (newTodo.id) {
-            this.stateService.update(newTodo);
+            this.productState.update(newTodo);
         } else {
-            this.stateService.create(newTodo);
+            this.productState.create(newTodo);
         }
     }
 
     delete(product: Product) {
-        this.stateService.delete(product);
+        this.productState.delete(product);
     }
 }

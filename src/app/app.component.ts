@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CounterStateService } from './modules/counter/counter-state.service';
+import { CounterStateService } from './modules/counter/state/counter-state.service';
 import { ProductState } from './modules/products/state/product.reducer';
 import { ProductStateService } from './modules/products/state/product-state.service';
 
