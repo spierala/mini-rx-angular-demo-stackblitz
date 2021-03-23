@@ -7,7 +7,6 @@ import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { TodoModule } from './modules/todo/todo.module';
-import { CounterModule } from './modules/counter/counter.module';
 import { StoreDevtoolsModule, StoreModule } from 'mini-rx-store-ng';
 import { ImmutableStateExtension, UndoExtension } from 'mini-rx-store';
 import { ProductStateModule } from './modules/products/state/product-state.module';
@@ -21,7 +20,6 @@ import { UserModule } from './modules/user/user.module';
         HttpClientInMemoryWebApiModule.forRoot(DbService, { delay: 500, put204: false }),
         AppRoutingModule,
         TodoModule,
-        CounterModule,
         UserModule,
         StoreModule.forRoot({
             extensions: [new ImmutableStateExtension(), new UndoExtension()],
