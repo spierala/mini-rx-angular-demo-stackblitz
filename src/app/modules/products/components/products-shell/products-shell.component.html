@@ -1,10 +1,18 @@
-<div class="d-flex flex-column h-100">
+<div class="d-flex flex-column h-100" *ngIf="userState.permissions$ | async as permissions">
     <nav class="navbar navbar-light bg-light mb-4">
         <a class="navbar-brand">
             Products
         </a>
         <div class="d-flex flex-grow-1 mb-2 justify-content-between mt-2">
-            <button class="btn btn-primary btn-sm" (click)="productState.newProduct()">New</button>
+            <div>
+                <button
+                    *ngIf="permissions.canUpdateProducts"
+                    class="btn btn-primary btn-sm"
+                    (click)="productState.newProduct()"
+                >
+                    New
+                </button>
+            </div>
             <app-product-filter
                 [search]="productState.search$ | async"
                 (searchChanged)="productState.updateSearch($event)"
@@ -34,7 +42,7 @@
                                 [products]="productState.products$ | async"
                                 [selectedProduct]="productState.selectedProduct$ | async"
                                 [displayCode]="productState.displayCode$ | async"
-                                [showCartBtn]="!(userState.isAdmin$ | async)"
+                                [showCartBtn]="!permissions.canUpdateProducts"
                                 (productSelect)="productState.productSelected($event)"
                                 (displayCodeChange)="productState.toggleProductCode($event)"
                                 (addToCart)="productState.addProductToCart($event)"

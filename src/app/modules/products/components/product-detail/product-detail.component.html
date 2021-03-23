@@ -1,4 +1,4 @@
-<div class="card h-100">
+<div class="card h-100" *ngIf="userState.permissions$ | async as permissions">
     <div class="card-header">
         <span>{{ product.id ? 'Edit Product' : 'Create Product' }}</span>
         <button (click)="onClose()" type="button" class="close" aria-label="Close">
@@ -7,7 +7,7 @@
     </div>
     <div class="card-body">
         <form #form="ngForm">
-            <fieldset [disabled]="!(userState.isAdmin$ | async)">
+            <fieldset [disabled]="!permissions.canUpdateProducts">
                 <div class="form-group">
                     <label>Name</label>
                     <input
@@ -65,7 +65,7 @@
                     ></textarea>
                 </div>
             </fieldset>
-            <ng-container *ngIf="userState.isAdmin$ | async">
+            <ng-container *ngIf="permissions.canUpdateProducts">
                 <button
                     class="btn btn-primary mr-2"
                     (click)="submit(form)"

@@ -3,24 +3,42 @@ import { FeatureStore } from 'mini-rx-store';
 import { Observable } from 'rxjs';
 
 interface UserState {
-    isAdmin: boolean;
+    firstName: string;
+    lastName: string;
+    permissions: Permissions;
+}
+
+interface Permissions {
+    canUpdateProducts: boolean;
 }
 
 const initialState: UserState = {
-    isAdmin: false,
+    firstName: 'John',
+    lastName: 'Doe',
+    permissions: {
+        canUpdateProducts: false,
+    },
 };
 
 @Injectable({
     providedIn: 'root',
 })
 export class UserStateService extends FeatureStore<UserState> {
-    isAdmin$: Observable<boolean> = this.select((state) => state.isAdmin);
+    permissions$: Observable<Permissions> = this.select((state) => state.permissions);
+    userFullName$: Observable<string> = this.select(
+        (state) => state.firstName + ' ' + state.lastName
+    );
 
     constructor() {
         super('user', initialState);
     }
 
-    toggleIsAdmin() {
-        this.setState((state) => ({ isAdmin: !state.isAdmin }));
+    toggleCanUpdateProducts() {
+        this.setState((state) => ({
+            permissions: {
+                ...state.permissions,
+                canUpdateProducts: !state.permissions.canUpdateProducts,
+            },
+        }));
     }
 }

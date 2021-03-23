@@ -1,2 +1,2 @@
-<p>{{ userState.isAdmin$ | async }}</p>
-<button (click)="userState.toggleIsAdmin()">Toggle isAdmin</button>
+<p>{{ userState.permissions$ | async | json }}</p>
+<button (click)="userState.toggleCanUpdateProducts()">Toggle canUpdateProducts</button>
