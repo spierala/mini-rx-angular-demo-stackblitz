@@ -1,17 +1,20 @@
 <div class="card h-100">
     <div class="card-header">
         <span>{{ todo.id ? 'Edit Todo' : 'Create Todo' }}</span>
-        <button (click)="onClose()" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button (click)="onClose()" type="button" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
     <div class="card-body">
         <form #form="ngForm">
             <div class="form-group">
-                <label>Title</label>
+                <label for="title">Title</label>
                 <input
                     class="form-control"
                     type="text"
                     [ngModel]="todo.title"
                     required
+                    id="title"
                     name="title"
                     placeholder="Name (required)"
                 />
@@ -19,18 +22,36 @@
             <div class="form-group">
                 <label>Status</label>
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="customSwitch1" [ngModel]="todo.isDone" name="isDone">
+                    <input
+                        type="checkbox"
+                        class="custom-control-input"
+                        id="customSwitch1"
+                        [ngModel]="todo.isDone"
+                        name="isDone"
+                    />
                     <label class="custom-control-label" for="customSwitch1">Done</label>
                 </div>
             </div>
             <div class="form-group">
                 <label class="d-block">Categories</label>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="isPrivate" name="isPrivate" [ngModel]="todo.isPrivate">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="isPrivate"
+                        name="isPrivate"
+                        [ngModel]="todo.isPrivate"
+                    />
                     <label class="form-check-label text-primary" for="isPrivate">Private</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="isBusiness" name="isBusiness" [ngModel]="todo.isBusiness">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="isBusiness"
+                        name="isBusiness"
+                        [ngModel]="todo.isBusiness"
+                    />
                     <label class="form-check-label text-info" for="isBusiness">Business</label>
                 </div>
             </div>
@@ -41,13 +62,22 @@
             >
                 Save
             </button>
-            <div  *ngIf="!todo.id"  class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="apiFail" name="apiFail" ngModel>
+            <div *ngIf="!todo.id" class="form-check">
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="apiFail"
+                    name="apiFail"
+                    ngModel
+                />
                 <label class="form-check-label text-secondary" for="apiFail">
                     Let API call fail (to simulate undo of optimistic update)
                 </label>
             </div>
-            <button *ngIf="todo.id" class="btn btn-primary btn-danger" (click)="delete()">Delete</button>
+            <button *ngIf="todo.id" class="btn btn-primary btn-danger" (click)="delete()">
+                Delete
+            </button>
         </form>
     </div>
 </div>
