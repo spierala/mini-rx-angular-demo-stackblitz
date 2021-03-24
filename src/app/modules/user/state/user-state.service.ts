@@ -22,7 +22,7 @@ const initialState: UserState = {
         lastName: 'Doe',
     },
     permissions: {
-        canUpdateProducts: true,
+        canUpdateProducts: false,
     },
 };
 
