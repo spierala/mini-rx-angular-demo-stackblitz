@@ -71,7 +71,7 @@ const getCartItemsWithExtraData = createSelector(
         }, []);
     }
 );
-const getCartItemsAmount = createSelector(getCartItems, (cartItems) => {
+const getCartItemsAmount = createSelector(getCartItemsWithExtraData, (cartItems) => {
     return cartItems.length;
 });
 const getHasCartItems = createSelector(getCartItemsAmount, (amount) => {
