@@ -28,7 +28,7 @@
     "ts-action": "^11.0.0",
     "ts-action-operators": "^9.1.1",
     "tslib": "^2.0.0",
-    "zone.js": "^0.11.4"
+    "zone.js": "~0.11.4"
   },
   "scripts": {
     "ng": "ng",
