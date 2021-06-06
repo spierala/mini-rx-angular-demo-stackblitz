@@ -9,5 +9,8 @@ import { UserStateService } from './modules/user/state/user-state.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-    constructor(private productState: ProductStateService, private userState: UserStateService) {}
+    constructor(
+        private productState: ProductStateService,
+        private userState: UserStateService
+    ) {}
 }
