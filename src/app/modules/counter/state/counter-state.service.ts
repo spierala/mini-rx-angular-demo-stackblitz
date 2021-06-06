@@ -12,9 +12,7 @@ const initialState: CounterState = {
     count: 42,
 };
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable()
 export class CounterStateService extends FeatureStore<CounterState> {
     $count: Observable<number> = this.select((state) => state.count);
 
