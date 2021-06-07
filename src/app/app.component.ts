@@ -10,7 +10,7 @@ import { UserStateService } from './modules/user/state/user-state.service';
 })
 export class AppComponent {
     constructor(
-        private productState: ProductStateService,
-        private userState: UserStateService
+        public productState: ProductStateService,
+        public userState: UserStateService
     ) {}
 }
