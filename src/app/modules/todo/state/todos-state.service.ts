@@ -5,10 +5,16 @@ import { EMPTY, Observable } from 'rxjs';
 import { catchError, mergeMap, tap } from 'rxjs/operators';
 import { TodosApiService } from '../services/todos-api.service';
 import { Action, createFeatureSelector, createSelector, FeatureStore } from 'mini-rx-store';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+
+export const adapter: EntityAdapter<Todo> = createEntityAdapter<Todo>();
+
+// get the selectors
+const { selectAll } = adapter.getSelectors();
 
 // STATE INTERFACE
 interface TodoState {
-    todos: Todo[];
+    todos: EntityState<Todo>;
     selectedTodoId: number;
     filter: Filter;
     newTodo: Todo; // Used when creating a new Todo
@@ -16,7 +22,7 @@ interface TodoState {
 
 // INITIAL STATE
 const initialState: TodoState = {
-    todos: [],
+    todos: adapter.getInitialState(),
     selectedTodoId: undefined,
     filter: {
         search: '',
@@ -30,7 +36,7 @@ const initialState: TodoState = {
 
 // MEMOIZED SELECTORS
 const getTodosFeatureSelector = createFeatureSelector<TodoState>();
-const getTodos = createSelector(getTodosFeatureSelector, (state) => state.todos);
+const getTodos = createSelector(getTodosFeatureSelector, (state) => selectAll(state.todos)); // `selectAll` is a memoized selector, that does not make sense here, but it works
 const getFilter = createSelector(getTodosFeatureSelector, (state) => state.filter);
 const getTodosFiltered = createSelector(getTodos, getFilter, (todos, filter) => {
     return todos.filter((item) => {
@@ -114,7 +120,12 @@ export class TodosStateService extends FeatureStore<TodoState> {
         return payload$.pipe(
             mergeMap(() =>
                 this.apiService.getTodos().pipe(
-                    tap((todos) => this.setState({ todos }, 'loadSuccess')),
+                    tap((todos) =>
+                        this.setState(
+                            (state) => ({ todos: adapter.setAll(todos, state.todos) }),
+                            'loadSuccess'
+                        )
+                    ),
                     catchError(() => EMPTY)
                 )
             )
@@ -127,7 +138,7 @@ export class TodosStateService extends FeatureStore<TodoState> {
         mergeMap(({ todo, apiFail }) => {
             const optimisticUpdate: Action = this.setState(
                 {
-                    todos: [...this.state.todos, todo],
+                    todos: adapter.addOne(todo, this.state.todos),
                 },
                 'createOptimistic'
             );
@@ -136,13 +147,15 @@ export class TodosStateService extends FeatureStore<TodoState> {
                 tap((newTodo) => {
                     this.setState(
                         (state) => ({
-                            todos: state.todos.map((item) =>
-                                item === todo
-                                    ? {
-                                          ...item,
-                                          id: newTodo.id,
-                                      }
-                                    : item
+                            todos: adapter.map(
+                                (item) =>
+                                    item === todo
+                                        ? {
+                                              ...item,
+                                              id: newTodo.id,
+                                          }
+                                        : item,
+                                this.state.todos
                             ),
                             newTodo: undefined,
                         }),
@@ -162,8 +175,9 @@ export class TodosStateService extends FeatureStore<TodoState> {
         this.apiService.updateTodo(todo).subscribe((updatedTodo) => {
             this.setState(
                 {
-                    todos: this.state.todos.map((item) =>
-                        item.id === todo.id ? updatedTodo : item
+                    todos: adapter.updateOne(
+                        { id: todo.id, changes: updatedTodo },
+                        this.state.todos
                     ),
                 },
                 'updateSuccess'
@@ -177,7 +191,7 @@ export class TodosStateService extends FeatureStore<TodoState> {
             this.setState(
                 {
                     selectedTodoId: undefined,
-                    todos: this.state.todos.filter((item) => item.id !== todo.id),
+                    todos: adapter.removeOne(todo.id, this.state.todos),
                 },
                 'deleteSuccess'
             );
