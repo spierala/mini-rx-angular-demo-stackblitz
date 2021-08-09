@@ -27,7 +27,7 @@ export class FilterComponent implements OnInit, OnDestroy {
     }),
   });
 
-  private unsubscribe$ = new Subject();
+  private unsubscribe$: Subject<void> = new Subject();
 
   constructor() {}
 

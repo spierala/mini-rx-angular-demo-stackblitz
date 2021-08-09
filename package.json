@@ -23,7 +23,7 @@
     "mini-rx-store-ng": "^2.0.0-rc.2",
     "prettier": "2.0.2",
     "pretty-quick": "^2.0.1",
-    "rxjs": "^6.5.5",
+    "rxjs": "^7.3.0",
     "ts-action": "^11.0.0",
     "ts-action-operators": "^9.1.1",
     "tslib": "^2.0.0",

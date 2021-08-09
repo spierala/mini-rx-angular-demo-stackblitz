@@ -10,7 +10,7 @@ import { debounceTime, takeUntil } from 'rxjs/operators';
 })
 export class ProductFilterComponent implements OnInit, OnDestroy {
 
-  private unsubscribe$ = new Subject();
+  private unsubscribe$: Subject<void> = new Subject();
 
   @Input()
   set search(search: string) {
