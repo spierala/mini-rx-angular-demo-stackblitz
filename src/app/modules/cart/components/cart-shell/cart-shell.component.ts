@@ -7,7 +7,7 @@ import { ProductStateService } from '../../../products/state/product-state.servi
     styleUrls: ['./cart-shell.component.css'],
 })
 export class CartShellComponent implements OnInit {
-    constructor(private stateService: ProductStateService) {}
+    constructor(public stateService: ProductStateService) {}
 
     ngOnInit(): void {}
 }
